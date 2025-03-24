@@ -8,17 +8,33 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "ds_source",
+						"type": "DatasetReference"
+					},
 					"name": "Src"
 				},
 				{
+					"dataset": {
+						"referenceName": "ds_target",
+						"type": "DatasetReference"
+					},
 					"name": "tgtsrc"
 				}
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "ds_target",
+						"type": "DatasetReference"
+					},
 					"name": "TgtUpsert"
 				},
 				{
+					"dataset": {
+						"referenceName": "ds_target",
+						"type": "DatasetReference"
+					},
 					"name": "TgtUpdate"
 				}
 			],
@@ -67,10 +83,14 @@
 				"}",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     inferDriftedColumnTypes: true) ~> Src",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Src",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: true,",
-				"     inferDriftedColumnTypes: true) ~> tgtsrc",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> tgtsrc",
 				"Src select(skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> retaildataselect",
 				"retaildataselect derive(Hash = md5(\r",
@@ -120,14 +140,22 @@
 				"     broadcast: 'auto')~> pkexist",
 				"InsertNew sink(allowSchemaDrift: true,",
 				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     format: 'table') ~> TgtUpsert",
+				"     skipDuplicateMapOutputs: true) ~> TgtUpsert",
 				"UpdateExisting sink(allowSchemaDrift: true,",
 				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     format: 'table') ~> TgtUpdate"
+				"     skipDuplicateMapOutputs: true) ~> TgtUpdate"
 			]
 		}
 	}
