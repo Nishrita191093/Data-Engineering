@@ -1,13 +1,132 @@
 {
-	"name": "dataflow3",
+	"name": "df_scd_type2",
 	"properties": {
+		"folder": {
+			"name": "df_Nishrita"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
-			"transformations": [],
+			"sources": [
+				{
+					"name": "empSrc"
+				},
+				{
+					"name": "TgtEmp"
+				}
+			],
+			"sinks": [
+				{
+					"name": "TgtEmpIns"
+				},
+				{
+					"name": "TgtUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "SrcHashed"
+				},
+				{
+					"name": "filterActv"
+				},
+				{
+					"name": "TgtHashed"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "addStaticColumns"
+				},
+				{
+					"name": "InsertNew"
+				},
+				{
+					"name": "exists2"
+				},
+				{
+					"name": "addStaticColumns1"
+				},
+				{
+					"name": "UpdateExisting"
+				}
+			],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          employee_id as integer,",
+				"          employee_name as string,",
+				"          department as string,",
+				"          salary as integer,",
+				"          hire_date as date 'dd-MM-yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false) ~> empSrc",
+				"source(output(",
+				"          employee_id as integer,",
+				"          employee_name as string,",
+				"          department as string,",
+				"          salary as integer,",
+				"          hire_date as date,",
+				"          start_date as timestamp,",
+				"          end_date as timestamp,",
+				"          current_flag as string,",
+				"          row_count as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true) ~> TgtEmp",
+				"empSrc select(mapColumn(",
+				"          employee_id,",
+				"          employee_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(SrcHash = md5(employee_id, employee_name, department, salary, hire_date)) ~> SrcHashed",
+				"TgtEmp filter(current_flag =='Y') ~> filterActv",
+				"filterActv derive(TgtHash = md5(employee_id, employee_name, department, salary, hire_date)) ~> TgtHashed",
+				"SrcHashed, TgtHashed exists(SrcHash==TgtHash,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 derive(start_date = currentTimestamp(),",
+				"          end_date = toTimestamp('9999-12-31', 'yyyy-MM-dd'),",
+				"          current_flag = 'Y') ~> addStaticColumns",
+				"addStaticColumns alterRow(upsertIf(true())) ~> InsertNew",
+				"TgtHashed, SrcHashed exists(select1@employee_id==TgtEmp@employee_id && select1@employee_name==TgtEmp@employee_name && TgtHash!= SrcHash,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 derive(end_date = currentTimestamp(),",
+				"          current_flag = 'N') ~> addStaticColumns1",
+				"addStaticColumns1 alterRow(updateIf(true())) ~> UpdateExisting",
+				"InsertNew sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          employee_id,",
+				"          employee_name,",
+				"          department,",
+				"          salary,",
+				"          hire_date,",
+				"          start_date,",
+				"          end_date,",
+				"          current_flag",
+				"     ),",
+				"     format: 'table') ~> TgtEmpIns",
+				"UpdateExisting sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          employee_id,",
+				"          end_date,",
+				"          current_flag",
+				"     ),",
+				"     format: 'table') ~> TgtUpdate"
 			]
 		}
 	}
