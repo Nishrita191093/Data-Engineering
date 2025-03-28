@@ -1,6 +1,72 @@
 {
 	"name": "pl_scd_type1",
 	"properties": {
-		"annotations": []
+		"folder": {
+			"name": "df_Nishrita"
+		},
+		"annotations": [],
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "source_scdtype1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzurePostgre_targetscdtype1",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 alterRow(upsertIf(1==1)) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['item_id'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          item_id,",
+				"          item_name,",
+				"          category,",
+				"          price,",
+				"          last_updated",
+				"     )) ~> sink1"
+			]
+		}
 	}
 }
