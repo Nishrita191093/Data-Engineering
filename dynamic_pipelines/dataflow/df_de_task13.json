@@ -1,0 +1,106 @@
+{
+	"name": "df_de_task13",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_salesCSV",
+						"type": "DatasetReference"
+					},
+					"name": "SalesCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_sales_east",
+						"type": "DatasetReference"
+					},
+					"name": "LoadEastRegion"
+				},
+				{
+					"dataset": {
+						"referenceName": "de_sales_west",
+						"type": "DatasetReference"
+					},
+					"name": "LoadWestRegion"
+				},
+				{
+					"dataset": {
+						"referenceName": "de_sales_north",
+						"type": "DatasetReference"
+					},
+					"name": "LoadNorthRegion"
+				},
+				{
+					"dataset": {
+						"referenceName": "de_sales_south",
+						"type": "DatasetReference"
+					},
+					"name": "LoadSouthRegion"
+				}
+			],
+			"transformations": [
+				{
+					"name": "RegionSplit"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          order_id as short,",
+				"          region as string,",
+				"          sales as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SalesCSV",
+				"SalesCSV split(region=='East',",
+				"     region=='West',",
+				"     region=='North',",
+				"     region=='South',",
+				"     disjoint: false) ~> RegionSplit@(RegionEast, RegionWest, RegionNorth, RegionSouth)",
+				"RegionSplit@RegionEast sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadEastRegion",
+				"RegionSplit@RegionWest sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadWestRegion",
+				"RegionSplit@RegionNorth sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadNorthRegion",
+				"RegionSplit@RegionSouth sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadSouthRegion"
+			]
+		}
+	}
+}

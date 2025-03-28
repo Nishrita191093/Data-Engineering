@@ -1,0 +1,20 @@
+{
+	"name": "de_sales_north",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "arshad",
+			"table": "de_sales_north"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,130 @@
+{
+	"name": "df_de_task3",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_TransactionsParquet",
+						"type": "DatasetReference"
+					},
+					"name": "ReadJSON"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_transactions",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB",
+					"description": "Export data to DETask2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AmountGreater1000"
+				},
+				{
+					"name": "SelectColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TransactionID as string,",
+				"          AccountID as string,",
+				"          TransactionAmount as double,",
+				"          TransactionDate as timestamp,",
+				"          TransactionType as string,",
+				"          Location as string,",
+				"          DeviceID as string,",
+				"          {IP Address} as string,",
+				"          MerchantID as string,",
+				"          Channel as string,",
+				"          CustomerAge as long,",
+				"          CustomerOccupation as string,",
+				"          TransactionDuration as long,",
+				"          LoginAttempts as long,",
+				"          AccountBalance as double,",
+				"          PreviousTransactionDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> ReadJSON",
+				"ReadJSON filter(TransactionAmount>1000) ~> AmountGreater1000",
+				"AmountGreater1000 select(mapColumn(",
+				"          TransactionID,",
+				"          AccountID,",
+				"          TransactionAmount,",
+				"          TransactionDate,",
+				"          TransactionType,",
+				"          Location,",
+				"          DeviceID,",
+				"          IPAddress = {IP Address},",
+				"          MerchantID,",
+				"          Channel,",
+				"          CustomerAge,",
+				"          CustomerOccupation,",
+				"          TransactionDuration,",
+				"          LoginAttempts,",
+				"          AccountBalance,",
+				"          PreviousTransactionDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"SelectColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          TransactionID as string,",
+				"          AccountID as string,",
+				"          TransactionAmount as double,",
+				"          TransactionDate as timestamp,",
+				"          TransactionType as string,",
+				"          Location as string,",
+				"          DeviceID as string,",
+				"          IPAddress as string,",
+				"          MerchantID as string,",
+				"          Channel as string,",
+				"          CustomerAge as integer,",
+				"          CustomerOccupation as string,",
+				"          TransactionDuration as integer,",
+				"          LoginAttempts as integer,",
+				"          AccountBalance as double,",
+				"          PreviousTransactionDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          TransactionID,",
+				"          AccountID,",
+				"          TransactionAmount,",
+				"          TransactionDate,",
+				"          TransactionType,",
+				"          Location,",
+				"          DeviceID,",
+				"          IPAddress,",
+				"          MerchantID,",
+				"          Channel,",
+				"          CustomerAge,",
+				"          CustomerOccupation,",
+				"          TransactionDuration,",
+				"          LoginAttempts,",
+				"          AccountBalance,",
+				"          PreviousTransactionDate",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

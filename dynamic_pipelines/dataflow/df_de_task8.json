@@ -1,0 +1,109 @@
+{
+	"name": "df_de_task8",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_user_data",
+						"type": "DatasetReference"
+					},
+					"name": "UserDataCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_user_data",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Duplicate"
+				},
+				{
+					"name": "FilterLatestTimestamp"
+				},
+				{
+					"name": "DropRowNumber"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          user_id as string,",
+				"          first_name as string,",
+				"          middle_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          age as short,",
+				"          date_of_birth as date 'dd-MM-yyyy',",
+				"          occupation as string,",
+				"          salary as double,",
+				"          timestamp as timestamp 'dd-MM-yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> UserDataCSV",
+				"UserDataCSV window(over(user_id),",
+				"     desc(timestamp, true),",
+				"     row_number = rowNumber()) ~> Duplicate",
+				"Duplicate filter(row_number==1) ~> FilterLatestTimestamp",
+				"FilterLatestTimestamp select(mapColumn(",
+				"          user_id,",
+				"          first_name,",
+				"          middle_name,",
+				"          last_name,",
+				"          gender,",
+				"          age,",
+				"          date_of_birth,",
+				"          occupation,",
+				"          salary,",
+				"          timestamp",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DropRowNumber",
+				"DropRowNumber sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          user_id as string,",
+				"          first_name as string,",
+				"          middle_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          age as integer,",
+				"          date_of_birth as date,",
+				"          occupation as string,",
+				"          salary as integer,",
+				"          timestamp as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          user_id,",
+				"          first_name,",
+				"          middle_name,",
+				"          last_name,",
+				"          gender,",
+				"          age,",
+				"          date_of_birth,",
+				"          occupation,",
+				"          salary,",
+				"          timestamp",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

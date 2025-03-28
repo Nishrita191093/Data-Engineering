@@ -1,0 +1,321 @@
+{
+	"name": "dynamic_Src_to_Target_with_Audit",
+	"properties": {
+		"activities": [
+			{
+				"name": "List SRC Table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "SELECT table_schema,table_name\nFROM information_schema.tables\nWHERE table_schema = 'nishrita' and table_name in ('employees_1','employees_4','employees_5');",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Source_Table_Dataset",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachTable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List SRC Table",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('List SRC Table').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data To Target",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT \n    s.id,\n    s.first_name,\n    s.last_name,\n    s.email,\n    s.insert_time,\n    current_timestamp AS update_time\nFROM \n    @{item().table_schema}.@{item().table_name} s\nWHERE \n    s.insert_time > (\n        SELECT \n            COALESCE(MAX(LastProcessedTimestamp), '1900-01-01') \n        FROM \n            nishrita.JobControlTable \n        WHERE \n            TableName = '@{item().table_name}'\n    );\n",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "-- Insert the initial log entry into the Job Control Table before starting the data load.\nINSERT INTO nishrita.JobControlTable (\n    TableName, \n    LastProcessedTimestamp, \n    Status, \n    StartTime, \n    EndTime, \n    ErrorMessage\n)\nVALUES (\n    '@{item().table_name}',                              -- Table name from the iteration\n    NULL,                                                -- LastProcessedTimestamp will be NULL at the start\n    'InProgress',                                        -- Status: \"InProgress\" while the load is running\n    CURRENT_TIMESTAMP,                                   -- Start time of the process\n    NULL,                                                -- End time is NULL at the start\n    NULL                                                 -- ErrorMessage is NULL initially\n);\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "id",
+												"type": "Int32",
+												"physicalType": "integer"
+											},
+											"sink": {
+												"name": "id",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "first_name",
+												"type": "String",
+												"physicalType": "character varying"
+											},
+											"sink": {
+												"name": "first_name",
+												"type": "String",
+												"physicalType": "character varying"
+											}
+										},
+										{
+											"source": {
+												"name": "last_name",
+												"type": "String",
+												"physicalType": "character varying"
+											},
+											"sink": {
+												"name": "last_name",
+												"type": "String",
+												"physicalType": "character varying"
+											}
+										},
+										{
+											"source": {
+												"name": "email",
+												"type": "String",
+												"physicalType": "character varying"
+											},
+											"sink": {
+												"name": "email",
+												"type": "String",
+												"physicalType": "character varying"
+											}
+										},
+										{
+											"source": {
+												"name": "insert_time",
+												"type": "DateTime",
+												"physicalType": "timestamp"
+											},
+											"sink": {
+												"name": "insert_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "update_time",
+												"type": "DateTime",
+												"physicalType": "timestamp"
+											},
+											"sink": {
+												"name": "update_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SQL_generic",
+									"type": "DatasetReference",
+									"parameters": {
+										"SchemaName": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().table_name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "tgt_generic",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@concat(item().table_name, '_target')",
+											"type": "Expression"
+										},
+										"SchemaName": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "PostCopy Success",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copy data To Target",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE nishrita.JobControlTable\nSET \n    Status = 'Success',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage = NULL,\n    LastProcessedTimestamp = (\n        SELECT MAX(insert_time) \n        FROM @{item().table_schema}.@{item().table_name}\n    )\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "PostCopy Failure",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copy data To Target",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE nishrita.JobControlTable\nSET \n    Status = 'Failed',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage ='@{replace(activity('Copy data To Target').output.errors[0].Message,'''','')}' -- Reference the error message dynamically\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-18T04:25:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

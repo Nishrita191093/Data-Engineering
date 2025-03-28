@@ -1,0 +1,83 @@
+{
+	"name": "df_task1",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task1_src",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task1_target",
+						"type": "DatasetReference"
+					},
+					"name": "target"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filtersalary"
+				},
+				{
+					"name": "derivedsalary"
+				},
+				{
+					"name": "dropunnecessarycolumn"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          employee_id as integer,",
+				"          name as string,",
+				"          salary as integer,",
+				"          address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source",
+				"source filter(salary>=50000) ~> filtersalary",
+				"filtersalary derive(annual_salary = salary*12) ~> derivedsalary",
+				"derivedsalary select(mapColumn(",
+				"          employee_id,",
+				"          name,",
+				"          salary,",
+				"          annual_salary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> dropunnecessarycolumn",
+				"dropunnecessarycolumn sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          employee_id as integer,",
+				"          name as string,",
+				"          salary as integer,",
+				"          address as string,",
+				"          annual_salary as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          employee_id,",
+				"          name,",
+				"          salary,",
+				"          annual_salary",
+				"     )) ~> target"
+			]
+		}
+	}
+}

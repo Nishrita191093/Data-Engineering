@@ -1,0 +1,247 @@
+{
+	"name": "DataLoad_RetailWarehouse_updated",
+	"properties": {
+		"activities": [
+			{
+				"name": "List source Table_name",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "SELECT 'retail_schema' as table_schema,source_table as table_name,incremental_column_name\nFROM retail_schema.master_table where status ='active';",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Source_Table_Dataset",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For each Table",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List source Table_name",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('List source Table_name').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy_Postgress_source_to_target",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT * FROM \n    @{item().table_schema}.@{item().table_name} s\nWHERE \n    s.@{item().incremental_column_name} > (\n        SELECT \n            COALESCE(MAX(LastProcessedTimestamp), '1900-01-01') \n        FROM \n            retail_schema.JobControlTable \n        WHERE \n            TableName = '@{item().table_name}'\n    );\n",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "-- Insert the initial log entry into the Job Control Table before starting the data load.\nINSERT INTO retail_schema.JobControlTable (\n    TableName, \n    LastProcessedTimestamp, \n    Status, \n    StartTime, \n    EndTime, \n    ErrorMessage\n)\nVALUES (\n    '@{item().table_name}',    --Table name from the iteration\n    NULL,                                                -- LastProcessedTimestamp will be NULL at the start\n    'InProgress',                                        -- Status: \"InProgress\" while the load is running\n    CURRENT_TIMESTAMP,                                   -- Start time of the process\n    NULL,                                                -- End time is NULL at the start\n    NULL                                                 -- ErrorMessage is NULL initially\n);\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Retail_source",
+									"type": "DatasetReference",
+									"parameters": {
+										"SchemaName": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().table_name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Retail_target",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@concat('target_',item().table_name )",
+											"type": "Expression"
+										},
+										"SchemaName": {
+											"value": "@item().table_schema",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "PostCopy Success",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copy_Postgress_source_to_target",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE retail_schema.JobControlTable\nSET \n    Status = 'Success',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage = NULL,\n    LastProcessedTimestamp = (\n        SELECT MAX(@{item().incremental_column_name})\n        FROM @{item().table_schema}.@{item().table_name}\n    )\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "retail_audit_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "retail_audit_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "PostCopy Failure",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Copy_Postgress_source_to_target",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE retail_schema.JobControlTable\nSET \n    Status = 'Failed',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage = '@{replace(activity('Copy_Postgress_source_to_target').output.errors[0].Message,'''','')}',  -- Reference the error message dynamically\n    LastProcessedTimestamp = (\n        SELECT MAX(@{item().incremental_column_name})\n        FROM @{item().table_schema}.@{item().table_name}\n    )\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-18T04:25:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

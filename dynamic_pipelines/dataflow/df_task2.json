@@ -1,0 +1,58 @@
+{
+	"name": "df_task2",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task2_jsonfile",
+						"type": "DatasetReference"
+					},
+					"name": "sourcejson"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "trgt_json_task2",
+						"type": "DatasetReference"
+					},
+					"name": "Targetjson"
+				}
+			],
+			"transformations": [
+				{
+					"name": "calculatedsales"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          region as string,",
+				"          sales as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> sourcejson",
+				"sourcejson aggregate(groupBy(region),",
+				"     total_sales = sum(sales)) ~> calculatedsales",
+				"calculatedsales sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          region as string,",
+				"          total_sales as decimal(0,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Targetjson"
+			]
+		}
+	}
+}

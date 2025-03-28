@@ -1,0 +1,81 @@
+{
+	"name": "df_de_task1",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_EmployeesCSV",
+						"type": "DatasetReference"
+					},
+					"name": "ReadCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_emp",
+						"type": "DatasetReference"
+					},
+					"name": "LoadDETask1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SalaryGreaterThan3000"
+				},
+				{
+					"name": "AnnualSalary"
+				},
+				{
+					"name": "DropAdressColumn"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          emp_id as short,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          start_date as date 'dd-MM-yyyy',",
+				"          years as short,",
+				"          dept as string,",
+				"          address as string,",
+				"          salary as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> ReadCSV",
+				"ReadCSV filter(salary>3000) ~> SalaryGreaterThan3000",
+				"SalaryGreaterThan3000 derive(annual_salary = salary*12) ~> AnnualSalary",
+				"AnnualSalary select(mapColumn(",
+				"          emp_id,",
+				"          first_name,",
+				"          last_name,",
+				"          gender,",
+				"          start_date,",
+				"          years,",
+				"          dept,",
+				"          salary,",
+				"          annual_salary",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DropAdressColumn",
+				"DropAdressColumn sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadDETask1"
+			]
+		}
+	}
+}

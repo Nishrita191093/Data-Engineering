@@ -1,0 +1,99 @@
+{
+	"name": "df_de_task10",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_studentsCSV",
+						"type": "DatasetReference"
+					},
+					"name": "StudentCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_top3_students",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "RankStudents"
+				},
+				{
+					"name": "Top3Students"
+				},
+				{
+					"name": "TotalScore"
+				},
+				{
+					"name": "DescendingScore"
+				},
+				{
+					"name": "SelectColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          student_id as short,",
+				"          name as string,",
+				"          age as short,",
+				"          gender as string,",
+				"          class as string,",
+				"          score as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> StudentCSV",
+				"StudentCSV window(over(class),",
+				"     desc(score, true),",
+				"     rank = rowNumber()) ~> RankStudents",
+				"DescendingScore filter(rank==1) ~> Top3Students",
+				"RankStudents window(over(student_id),",
+				"     total_score = sum(score)) ~> TotalScore",
+				"TotalScore sort(desc(total_score, true)) ~> DescendingScore",
+				"Top3Students select(mapColumn(",
+				"          student_id,",
+				"          name,",
+				"          age,",
+				"          gender,",
+				"          total_score",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"SelectColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          student_id as integer,",
+				"          name as string,",
+				"          age as integer,",
+				"          gender as string,",
+				"          total_score as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          student_id,",
+				"          name,",
+				"          age,",
+				"          gender,",
+				"          total_score",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

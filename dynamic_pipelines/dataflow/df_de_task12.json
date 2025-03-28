@@ -1,0 +1,115 @@
+{
+	"name": "df_de_task12",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_customer1",
+						"type": "DatasetReference"
+					},
+					"name": "Customer1CSV"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_de_customer2",
+						"type": "DatasetReference"
+					},
+					"name": "Customer2CSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_unique_customers",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Customer1and2"
+				},
+				{
+					"name": "Duplicate"
+				},
+				{
+					"name": "FilterDuplicate"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_id as string,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          age as short,",
+				"          date_of_birth as date 'dd-MM-yyyy',",
+				"          occupation as string,",
+				"          salary as double,",
+				"          timestamp as date 'dd-MM-yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> Customer1CSV",
+				"source(output(",
+				"          customer_id as string,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          age as short,",
+				"          date_of_birth as date 'dd-MM-yyyy',",
+				"          occupation as string,",
+				"          salary as double,",
+				"          timestamp as date 'dd-MM-yyyy'",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> Customer2CSV",
+				"Customer1CSV, Customer2CSV union(byName: true)~> Customer1and2",
+				"Customer1and2 window(over(customer_id),",
+				"     desc(customer_id, true),",
+				"     rank = rowNumber()) ~> Duplicate",
+				"Duplicate filter(rank==1) ~> FilterDuplicate",
+				"FilterDuplicate sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          customer_id as string,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          gender as string,",
+				"          age as integer,",
+				"          date_of_birth as date,",
+				"          occupation as string,",
+				"          salary as integer,",
+				"          timestamp as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          customer_id,",
+				"          first_name,",
+				"          last_name,",
+				"          gender,",
+				"          age,",
+				"          date_of_birth,",
+				"          occupation,",
+				"          salary,",
+				"          timestamp",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

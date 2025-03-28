@@ -1,0 +1,49 @@
+{
+	"name": "ds_online_learning_activity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/Incremental_load"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "online_learning_activity",
+				"folderPath": "incremental_load",
+				"fileSystem": "arsh"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Visit_ID",
+				"type": "String"
+			},
+			{
+				"name": "User_ID",
+				"type": "String"
+			},
+			{
+				"name": "Page_Visited",
+				"type": "String"
+			},
+			{
+				"name": "Duration_Secs",
+				"type": "String"
+			},
+			{
+				"name": "Visit_Timestamp",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

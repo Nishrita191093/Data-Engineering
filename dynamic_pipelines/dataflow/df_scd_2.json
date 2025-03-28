@@ -1,0 +1,147 @@
+{
+	"name": "df_scd_2",
+	"properties": {
+		"folder": {
+			"name": "Arshad/SCD_1_AND_2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SCR_PGSQL",
+						"type": "DatasetReference"
+					},
+					"name": "SourceTables"
+				},
+				{
+					"dataset": {
+						"referenceName": "TGT_PGSQL",
+						"type": "DatasetReference"
+					},
+					"name": "TargetTables"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "TGT_PGSQL",
+						"type": "DatasetReference"
+					},
+					"name": "LoadUpsert"
+				},
+				{
+					"dataset": {
+						"referenceName": "TGT_PGSQL",
+						"type": "DatasetReference"
+					},
+					"name": "LoadUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SourceHash"
+				},
+				{
+					"name": "TargetHash"
+				},
+				{
+					"name": "AuditColumns"
+				},
+				{
+					"name": "ForInsertRow"
+				},
+				{
+					"name": "ExistsTarget"
+				},
+				{
+					"name": "UpdateIf"
+				},
+				{
+					"name": "UpdateAuditColumns"
+				},
+				{
+					"name": "FilterActiveOnly"
+				},
+				{
+					"name": "ExisitsForUpdate"
+				},
+				{
+					"name": "UpsertIf"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     scd2_timestamp_column as string,",
+				"     scd2_md5_columns as string,",
+				"     scd2_source_pk as string,",
+				"     scd2_target_pk as string,",
+				"     scd2_status_column as string",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SourceTables",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TargetTables",
+				"SourceTables derive(Hash = md5(concat(\r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[0])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[1])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[2])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[3])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[4])), '')\r",
+				"    )\r",
+				")) ~> SourceHash",
+				"FilterActiveOnly derive(Hash = md5(concat(\r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[0])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[1])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[2])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[3])), ''), '|',    \r",
+				"    coalesce(toString(byName(split($scd2_md5_columns, ',')[4])), '')\r",
+				"    )\r",
+				")) ~> TargetHash",
+				"ForInsertRow derive(start_date = currentTimestamp(),",
+				"          end_date = toTimestamp('2099-12-31','yyyy-MM-dd'),",
+				"          status = 'Y') ~> AuditColumns",
+				"SourceHash, TargetHash exists(SourceHash@Hash == TargetHash@Hash,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> ForInsertRow",
+				"TargetHash, SourceHash exists($scd2_source_pk==$scd2_target_pk,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> ExistsTarget",
+				"UpdateAuditColumns alterRow(updateIf(true())) ~> UpdateIf",
+				"ExisitsForUpdate derive(end_date = currentTimestamp(),",
+				"          status = 'N') ~> UpdateAuditColumns",
+				"TargetTables filter(toString(byName(($scd2_status_column)))=='Y') ~> FilterActiveOnly",
+				"ExistsTarget, SourceHash exists(TargetHash@Hash==SourceHash@Hash,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> ExisitsForUpdate",
+				"AuditColumns alterRow(upsertIf(true())) ~> UpsertIf",
+				"UpsertIf sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:[($scd2_target_pk),($scd2_timestamp_column)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadUpsert",
+				"UpdateIf sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:[($scd2_target_pk),($scd2_timestamp_column)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> LoadUpdate"
+			]
+		}
+	}
+}

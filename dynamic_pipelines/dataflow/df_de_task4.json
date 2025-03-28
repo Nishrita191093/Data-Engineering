@@ -1,0 +1,117 @@
+{
+	"name": "df_de_task4",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_CustomerCSV",
+						"type": "DatasetReference"
+					},
+					"name": "CustomerCSV"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_de_InvoiceCSV",
+						"type": "DatasetReference"
+					},
+					"name": "InvoiceCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_customer_invoice",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB",
+					"description": "Export data to DETask2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinCustomerInvoice"
+				},
+				{
+					"name": "DropCustomerID"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_id as short,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          address as string,",
+				"          city as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> CustomerCSV",
+				"source(output(",
+				"          invoice_id as short,",
+				"          customer_id as short,",
+				"          invoice_date as timestamp,",
+				"          billing_address as string,",
+				"          billing_city as string,",
+				"          billing_postal_code as string,",
+				"          total as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> InvoiceCSV",
+				"CustomerCSV, InvoiceCSV join(CustomerCSV@customer_id == InvoiceCSV@customer_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinCustomerInvoice",
+				"JoinCustomerInvoice select(mapColumn(",
+				"          customer_id = CustomerCSV@customer_id,",
+				"          first_name,",
+				"          last_name,",
+				"          address,",
+				"          city,",
+				"          country,",
+				"          invoice_id,",
+				"          invoice_date,",
+				"          billing_address,",
+				"          billing_city,",
+				"          billing_postal_code,",
+				"          total",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DropCustomerID",
+				"DropCustomerID sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          customer_id,",
+				"          first_name,",
+				"          last_name,",
+				"          address,",
+				"          city,",
+				"          country,",
+				"          invoice_id,",
+				"          invoice_date,",
+				"          billing_address,",
+				"          billing_city,",
+				"          billing_postal_code,",
+				"          total",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

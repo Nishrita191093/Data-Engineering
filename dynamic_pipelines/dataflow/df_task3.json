@@ -1,0 +1,78 @@
+{
+	"name": "df_task3",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Parquet_task3",
+						"type": "DatasetReference"
+					},
+					"name": "readParquet"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task3_parquettgt",
+						"type": "DatasetReference"
+					},
+					"name": "target"
+				}
+			],
+			"transformations": [
+				{
+					"name": "filtertransactions"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TransactionID as string,",
+				"          AccountID as string,",
+				"          TransactionAmount as double,",
+				"          TransactionDate as timestamp,",
+				"          TransactionType as string,",
+				"          Location as string,",
+				"          DeviceID as string,",
+				"          {IP Address} as string,",
+				"          MerchantID as string,",
+				"          Channel as string,",
+				"          CustomerAge as long,",
+				"          CustomerOccupation as string,",
+				"          TransactionDuration as long,",
+				"          LoginAttempts as long,",
+				"          AccountBalance as double,",
+				"          PreviousTransactionDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> readParquet",
+				"readParquet filter(TransactionAmount>=1000) ~> filtertransactions",
+				"filtertransactions sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          transaction_id as integer,",
+				"          amount as decimal(0,0),",
+				"          transaction_date as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          transaction_id = TransactionID,",
+				"          amount = TransactionAmount,",
+				"          transaction_date = TransactionDate",
+				"     )) ~> target"
+			]
+		}
+	}
+}

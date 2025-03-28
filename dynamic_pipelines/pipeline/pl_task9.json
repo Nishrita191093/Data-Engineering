@@ -1,0 +1,37 @@
+{
+	"name": "pl_task9",
+	"properties": {
+		"activities": [
+			{
+				"name": "df_task9",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_task9",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita/Task Pipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-02-25T12:26:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

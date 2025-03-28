@@ -1,0 +1,208 @@
+{
+	"name": "df_scdtype2",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "source_scdtype2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzurePostgre_targetscdtype2",
+						"type": "DatasetReference"
+					},
+					"name": "srclookup"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzurePostgre_targetscdtype2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzurePostgre_targetscdtype2",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "Insert"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "Update"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp,",
+				"          start_date as timestamp,",
+				"          end_date as timestamp,",
+				"          current_flag as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> srclookup",
+				"srclookup select(mapColumn(",
+				"          item_id_lookup = item_id,",
+				"          item_name_lookup = item_name,",
+				"          category_lookup = category,",
+				"          price_lookup = price,",
+				"          last_updated_lookup = last_updated,",
+				"          start_date_lookup = start_date,",
+				"          end_date_lookup = end_date,",
+				"          current_flag_lookup = current_flag",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1, srclookup lookup(source1@item_id == srclookup@item_id",
+				"     && source1@item_name == srclookup@item_name,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 filter(isNull(srclookup@item_id)||(source1@item_name)!=(srclookup@item_name)||(source1@price)!=(srclookup@price)||(source1@category)!=(srclookup@category)||(source1@last_updated)!=(srclookup@last_updated)) ~> Insert",
+				"Insert derive(current_flag = 1) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          item_id = source1@item_id,",
+				"          item_name = source1@item_name,",
+				"          category = source1@category,",
+				"          price = source1@price,",
+				"          last_updated = source1@last_updated,",
+				"          start_date,",
+				"          end_date,",
+				"          current_flag",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"lookup1 filter((!isNull(srclookup@item_id)) && \r",
+				"(\r",
+				"    (source1@item_name != srclookup@item_name) || \r",
+				"    (source1@price != srclookup@price) || \r",
+				"    (source1@category != srclookup@category) || \r",
+				"    (source1@last_updated != srclookup@last_updated)\r",
+				")) ~> Update",
+				"Update derive(current_flag = 0) ~> derivedColumn2",
+				"derivedColumn2 select(mapColumn(",
+				"          item_id = srclookup@item_id,",
+				"          item_name = srclookup@item_name,",
+				"          category = srclookup@category,",
+				"          price = srclookup@price,",
+				"          last_updated = srclookup@last_updated,",
+				"          start_date,",
+				"          end_date,",
+				"          current_flag",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select3 alterRow(updateIf(1==1)) ~> alterRow1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp,",
+				"          start_date as timestamp,",
+				"          end_date as timestamp,",
+				"          current_flag as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          item_id,",
+				"          item_name,",
+				"          category,",
+				"          price,",
+				"          last_updated,",
+				"          start_date,",
+				"          end_date",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          item_id as integer,",
+				"          item_name as string,",
+				"          category as string,",
+				"          price as integer,",
+				"          last_updated as timestamp,",
+				"          start_date as timestamp,",
+				"          end_date as timestamp,",
+				"          current_flag as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['item_id','item_name','category','price'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          item_id,",
+				"          item_name,",
+				"          category,",
+				"          price,",
+				"          last_updated,",
+				"          start_date,",
+				"          end_date,",
+				"          current_flag",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}

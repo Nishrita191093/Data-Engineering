@@ -1,0 +1,88 @@
+{
+	"name": "df_de_task2",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_SalesJSON",
+						"type": "DatasetReference"
+					},
+					"name": "ReadJSON"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_sales",
+						"type": "DatasetReference"
+					},
+					"name": "LoadDETask2",
+					"description": "Export data to DETask2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TotalSaleByRegion"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Category as string,",
+				"          City as string,",
+				"          Country as string,",
+				"          {Customer ID} as string,",
+				"          {Customer Name} as string,",
+				"          Discount as double,",
+				"          Market as string,",
+				"          {Order Date} as date,",
+				"          {Order ID} as string,",
+				"          {Order Priority} as string,",
+				"          {Postal Code} as integer,",
+				"          {Product ID} as string,",
+				"          {Product Name} as string,",
+				"          Profit as double,",
+				"          Quantity as short,",
+				"          Region as string,",
+				"          {Row ID} as integer,",
+				"          Sales as double,",
+				"          Segment as string,",
+				"          {Ship Date} as date,",
+				"          {Ship Mode} as string,",
+				"          {Shipping Cost} as double,",
+				"          State as string,",
+				"          {Sub-Category} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> ReadJSON",
+				"ReadJSON aggregate(groupBy(Region),",
+				"     total_sales = round(sum(Sales),0)) ~> TotalSaleByRegion",
+				"TotalSaleByRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          region as string,",
+				"          total_sales as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          region = Region,",
+				"          total_sales",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> LoadDETask2"
+			]
+		}
+	}
+}

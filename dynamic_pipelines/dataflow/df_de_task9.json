@@ -1,0 +1,92 @@
+{
+	"name": "df_de_task9",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_sales",
+						"type": "DatasetReference"
+					},
+					"name": "SalesCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_sales_by_region",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TotalSales"
+				},
+				{
+					"name": "RankingByRegion"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Row ID} as integer,",
+				"          {Order ID} as string,",
+				"          {Order Date} as date 'dd-MM-yyyy',",
+				"          {Ship Date} as date 'dd-MM-yyyy',",
+				"          {Ship Mode} as string,",
+				"          {Customer ID} as string,",
+				"          {Customer Name} as string,",
+				"          Segment as string,",
+				"          City as string,",
+				"          State as string,",
+				"          Country as string,",
+				"          {Postal Code} as integer,",
+				"          Market as string,",
+				"          Region as string,",
+				"          {Product ID} as string,",
+				"          Category as string,",
+				"          {Sub-Category} as string,",
+				"          {Product Name} as string,",
+				"          Sales as double,",
+				"          Quantity as short,",
+				"          Discount as double,",
+				"          Profit as double,",
+				"          {Shipping Cost} as double,",
+				"          {Order Priority} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> SalesCSV",
+				"SalesCSV aggregate(groupBy(Region),",
+				"     total_sales = round(sum(Sales),0)) ~> TotalSales",
+				"TotalSales window(desc(total_sales, true),",
+				"     rank = rowNumber()) ~> RankingByRegion",
+				"RankingByRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          region as string,",
+				"          total_sales as double,",
+				"          rank as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          region = Region,",
+				"          total_sales,",
+				"          rank",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

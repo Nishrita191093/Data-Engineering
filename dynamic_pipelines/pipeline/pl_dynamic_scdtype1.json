@@ -1,0 +1,216 @@
+{
+	"name": "pl_dynamic_scdtype1",
+	"properties": {
+		"activities": [
+			{
+				"name": "List source Table_name",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "SELECT 'retail_schema' as table_schema,source_table as table_name,incremental_column_name,load_type,type1_pk_column\nFROM retail_schema.master_table where status='active';",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Source_Table_Dataset",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For each_scdtype1_tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "List source Table_name",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('List source Table_name').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "df_scd_type1",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_dynamic_scdtype1",
+									"type": "DataFlowReference",
+									"parameters": {
+										"type1_pk_column": {
+											"value": "'@{item().type1_pk_column}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"source1": {
+											"SchemaName": "@item().table_schema",
+											"TableName": {
+												"value": "@item().table_name",
+												"type": "Expression"
+											}
+										},
+										"sink1": {
+											"TableName": "@concat('target_',item().table_name )",
+											"SchemaName": "@item().table_schema"
+										}
+									}
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
+						},
+						{
+							"name": "PostCopy Success",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "df_scd_type1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE retail_schema.JobControlTable\nSET \n    Status = 'Success',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage = NULL,\n    LastProcessedTimestamp = (\n        SELECT MAX(@{item().incremental_column_name})\n        FROM @{item().table_schema}.@{item().table_name}\n    )\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "retail_audit_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "retail_audit_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "PostCopy Failure",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "df_scd_type1",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"preCopyScript": {
+										"value": "UPDATE retail_schema.JobControlTable\nSET \n    Status = 'Failed',\n    EndTime = CURRENT_TIMESTAMP,\n    ErrorMessage = '@{replace(activity('df_scd_type1').output.errors[0].Message,'''','')}',  -- Reference the error message dynamically\n    LastProcessedTimestamp = (\n        SELECT MAX(@{item().incremental_column_name})\n        FROM @{item().table_schema}.@{item().table_name}\n    )\nWHERE TableName = '@{item().table_name}' \n  AND Status = 'InProgress';\n",
+										"type": "Expression"
+									},
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table_db",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-18T04:25:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,137 @@
+{
+	"name": "df_task13",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task13_srcsales",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task13_salesdatatgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "df_task13_south",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "task13_east",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "task13_west",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          order_id as integer,",
+				"          region as string,",
+				"          sales as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 split(region == 'North',",
+				"     region == 'South',",
+				"     region == 'East',",
+				"     region == 'West',",
+				"     disjoint: false,",
+				"     partitionBy('hash', 1)) ~> split1@(NorthRegion, SouthRegion, EastRegion, WestRegion, region)",
+				"split1@NorthRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          order_id as integer,",
+				"          region as string,",
+				"          sales as decimal(0,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          order_id,",
+				"          region,",
+				"          sales",
+				"     )) ~> sink1",
+				"split1@SouthRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          order_id as integer,",
+				"          region as string,",
+				"          sales as decimal(0,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2",
+				"split1@EastRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          order_id as integer,",
+				"          region as string,",
+				"          sales as decimal(0,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          order_id,",
+				"          region,",
+				"          sales",
+				"     )) ~> sink3",
+				"split1@WestRegion sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          order_id as integer,",
+				"          region as string,",
+				"          sales as decimal(0,0)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink4"
+			]
+		}
+	}
+}

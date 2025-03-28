@@ -1,0 +1,20 @@
+{
+	"name": "db_online_orders_stg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/Incremental_load"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "arshad",
+			"table": "online_orders_stg"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

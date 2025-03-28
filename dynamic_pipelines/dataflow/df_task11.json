@@ -1,0 +1,70 @@
+{
+	"name": "df_task11",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task11_srcsales11",
+						"type": "DatasetReference"
+					},
+					"name": "readsalescsv"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task11_tgtsales11",
+						"type": "DatasetReference"
+					},
+					"name": "Targetsales"
+				}
+			],
+			"transformations": [
+				{
+					"name": "CalculateTotalAmount"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          order_id as integer,",
+				"          product as string,",
+				"          price as decimal(10,0),",
+				"          quantity as integer,",
+				"          total_amount as decimal(10,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> readsalescsv",
+				"readsalescsv derive(total_amount = price * quantity) ~> CalculateTotalAmount",
+				"CalculateTotalAmount sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          order_id as integer,",
+				"          product as string,",
+				"          price as decimal(10,2),",
+				"          quantity as integer,",
+				"          total_amount as decimal(10,2)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          order_id,",
+				"          product,",
+				"          price,",
+				"          quantity,",
+				"          total_amount",
+				"     )) ~> Targetsales"
+			]
+		}
+	}
+}

@@ -1,0 +1,136 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Retail_source",
+						"type": "DatasetReference"
+					},
+					"name": "source"
+				},
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "target"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "TargetInsert"
+				},
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "TargetUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "sourcehash"
+				},
+				{
+					"name": "targethash"
+				},
+				{
+					"name": "existsInsert"
+				},
+				{
+					"name": "Activecolumns"
+				},
+				{
+					"name": "selectdata"
+				},
+				{
+					"name": "existtarget"
+				},
+				{
+					"name": "existsupdate"
+				},
+				{
+					"name": "Inactivecolumn"
+				},
+				{
+					"name": "updateif"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "upsertif"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     all_columns as string ('transaction_id,store_id,transaction_date,product_id,quantity_sold,price_per_unit,total_amount,customer_id,payment_method,transactions_insert_time'),",
+				"     type2_pk as string ('transaction_id')",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> target",
+				"source derive(hash = md5($all_columns)) ~> sourcehash",
+				"target derive(hash = md5($all_columns)) ~> targethash",
+				"sourcehash, targethash exists(sourcehash@hash == targethash@hash,",
+				"     negate:true,",
+				"     partitionBy('hash', 1),",
+				"     broadcast: 'left')~> existsInsert",
+				"existsInsert derive(current_flag = 'Y') ~> Activecolumns",
+				"Activecolumns select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectdata",
+				"targethash, sourcehash exists($type2_pk==$type2_pk,",
+				"     negate:false,",
+				"     broadcast: 'left')~> existtarget",
+				"existtarget, sourcehash exists(targethash@hash==sourcehash@hash,",
+				"     negate:true,",
+				"     broadcast: 'left')~> existsupdate",
+				"existsupdate derive(current_flag = 'N',",
+				"          end_date = currentTimestamp()) ~> Inactivecolumn",
+				"Inactivecolumn alterRow(updateIf(1==1)) ~> updateif",
+				"updateif select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"selectdata alterRow(upsertIf(1==1)) ~> upsertif",
+				"upsertif sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:[($type2_pk)],",
+				"     skipKeyWrites:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TargetInsert",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:[($type2_pk)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TargetUpdate"
+			]
+		}
+	}
+}

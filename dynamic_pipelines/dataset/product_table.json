@@ -1,0 +1,20 @@
+{
+	"name": "product_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/SCD1_SCD2"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "arshad",
+			"table": "product"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

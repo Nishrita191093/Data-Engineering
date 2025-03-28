@@ -1,0 +1,90 @@
+{
+	"name": "Parquet_task3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Nishrita/Tasks"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "transactions.parquet",
+				"folderPath": "Input",
+				"container": "nishrita"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "TransactionID",
+				"type": "UTF8"
+			},
+			{
+				"name": "AccountID",
+				"type": "UTF8"
+			},
+			{
+				"name": "TransactionAmount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "TransactionDate",
+				"type": "TIMESTAMP_MICROS"
+			},
+			{
+				"name": "TransactionType",
+				"type": "UTF8"
+			},
+			{
+				"name": "Location",
+				"type": "UTF8"
+			},
+			{
+				"name": "DeviceID",
+				"type": "UTF8"
+			},
+			{
+				"name": "IP Address",
+				"type": "UTF8"
+			},
+			{
+				"name": "MerchantID",
+				"type": "UTF8"
+			},
+			{
+				"name": "Channel",
+				"type": "UTF8"
+			},
+			{
+				"name": "CustomerAge",
+				"type": "INT_64"
+			},
+			{
+				"name": "CustomerOccupation",
+				"type": "UTF8"
+			},
+			{
+				"name": "TransactionDuration",
+				"type": "INT_64"
+			},
+			{
+				"name": "LoginAttempts",
+				"type": "INT_64"
+			},
+			{
+				"name": "AccountBalance",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "PreviousTransactionDate",
+				"type": "TIMESTAMP_MICROS"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

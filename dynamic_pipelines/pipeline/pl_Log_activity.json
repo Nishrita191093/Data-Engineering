@@ -1,0 +1,341 @@
+{
+	"name": "pl_Log_activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyTotalSale",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzurePostgreSQLSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"writeMethod": "CopyCommand"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzurePostgre_targetscdtype1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzurePostgreSqlTable16",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "CREATE ERROR FILE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "CopyTotalSale",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzurePostgreSQLSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"writeMethod": "CopyCommand"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "datafactory_name"
+								},
+								"sink": {
+									"name": "datafactory_name",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "pipeline_name"
+								},
+								"sink": {
+									"name": "pipeline_name",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "runid"
+								},
+								"sink": {
+									"name": "runid",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "source"
+								},
+								"sink": {
+									"name": "source",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "destination"
+								},
+								"sink": {
+									"name": "destination",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "execution_status"
+								},
+								"sink": {
+									"name": "execution_status",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "errorcode"
+								},
+								"sink": {
+									"name": "errorcode",
+									"type": "integer",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "errordescriprion"
+								},
+								"sink": {
+									"name": "errordescription",
+									"type": "text",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "errorloggedtime"
+								},
+								"sink": {
+									"name": "errorloggedtime",
+									"type": "timestamp without time zone",
+									"scale": 0,
+									"precision": 0
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "EmployeeSrcFile",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzurePostgreSqlTable5",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "CREATE SUCCESS FILE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "CopyTotalSale",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzurePostgreSQLSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"writeMethod": "CopyCommand"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "datafactory_name"
+								},
+								"sink": {
+									"name": "datafactory_name",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "pipeline_name"
+								},
+								"sink": {
+									"name": "pipeline_name",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "runid"
+								},
+								"sink": {
+									"name": "runid",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "source"
+								},
+								"sink": {
+									"name": "source",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "destination"
+								},
+								"sink": {
+									"name": "destination",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							},
+							{
+								"source": {
+									"name": "execution_status"
+								},
+								"sink": {
+									"name": "execution_status",
+									"type": "character varying",
+									"scale": 0,
+									"precision": 0
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzurePostgreSqlTable16",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzurePostgreSqlTable5",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-02-24T11:58:31Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,115 @@
+{
+	"name": "df_de_task5",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_InvoiceCSVfile",
+						"type": "DatasetReference"
+					},
+					"name": "InvoiceCSV"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_de_InvoiceParquetfile",
+						"type": "DatasetReference"
+					},
+					"name": "InvoiceParquet"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_multi_invoices",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB",
+					"description": "Export data to DETask2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinCustomerInvoice"
+				},
+				{
+					"name": "DropInvoiceID"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          invoice_id as short,",
+				"          customer_id as short,",
+				"          invoice_date as timestamp 'dd-MM-yyyy',",
+				"          billing_address as string,",
+				"          billing_city as string,",
+				"          billing_postal_code as string,",
+				"          total as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> InvoiceCSV",
+				"source(output(",
+				"          invoice_line_id as long,",
+				"          invoice_id as long,",
+				"          track_id as long,",
+				"          unit_price as double,",
+				"          quantity as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> InvoiceParquet",
+				"InvoiceCSV, InvoiceParquet join(InvoiceCSV@invoice_id == InvoiceParquet@invoice_id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinCustomerInvoice",
+				"JoinCustomerInvoice select(mapColumn(",
+				"          invoice_id = InvoiceCSV@invoice_id,",
+				"          customer_id,",
+				"          invoice_date,",
+				"          billing_address,",
+				"          billing_city,",
+				"          billing_postal_code,",
+				"          total,",
+				"          invoice_line_id,",
+				"          track_id,",
+				"          unit_price,",
+				"          quantity",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DropInvoiceID",
+				"DropInvoiceID sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          invoice_id,",
+				"          customer_id,",
+				"          invoice_date,",
+				"          billing_address,",
+				"          billing_city,",
+				"          billing_postal_code,",
+				"          total,",
+				"          invoice_line_id,",
+				"          track_id,",
+				"          unit_price,",
+				"          quantity",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

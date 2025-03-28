@@ -1,0 +1,49 @@
+{
+	"name": "LOOKUP_PGSQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"table_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [
+			{
+				"name": "table_id",
+				"type": "integer",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "source_table",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "target_table",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "status",
+				"type": "boolean",
+				"precision": 0,
+				"scale": 0
+			},
+			{
+				"name": "timestamp_column",
+				"type": "character varying",
+				"precision": 0,
+				"scale": 0
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

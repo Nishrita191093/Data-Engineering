@@ -1,0 +1,94 @@
+{
+	"name": "df_de_task6",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_product_na",
+						"type": "DatasetReference"
+					},
+					"name": "ProductsCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_fill_null_product",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "AvgPrice"
+				},
+				{
+					"name": "FillAvgPrice"
+				},
+				{
+					"name": "JoinAvgPrice"
+				},
+				{
+					"name": "DropNullColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Product ID} as short,",
+				"          {Product Name} as string,",
+				"          Brand as string,",
+				"          Category as string,",
+				"          Price as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> ProductsCSV",
+				"ProductsCSV aggregate(avg_price = round(avg(Price),0)) ~> AvgPrice",
+				"JoinAvgPrice derive(Filled_Null_Price = coalesce(Price, avg_price)) ~> FillAvgPrice",
+				"ProductsCSV, AvgPrice join(1 == 1,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'right')~> JoinAvgPrice",
+				"FillAvgPrice select(mapColumn(",
+				"          Product_ID = {Product ID},",
+				"          Product_Name = {Product Name},",
+				"          Brand,",
+				"          Category,",
+				"          Price = Filled_Null_Price",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DropNullColumns",
+				"DropNullColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          product_name as string,",
+				"          brand as string,",
+				"          category as string,",
+				"          price as double,",
+				"          product_id as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          product_name = Product_Name,",
+				"          brand = Brand,",
+				"          category = Category,",
+				"          price = Price,",
+				"          product_id = Product_ID",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

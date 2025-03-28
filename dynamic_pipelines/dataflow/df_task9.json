@@ -1,0 +1,68 @@
+{
+	"name": "df_task9",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task9_salesdata",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task9_tgt",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "window1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sales_id as integer,",
+				"          region as string,",
+				"          sales_amount as decimal(10,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 window(over(region),",
+				"     desc(sales_amount, true),",
+				"     sales_rank = rank()) ~> window1",
+				"window1 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          sales_id as integer,",
+				"          region as string,",
+				"          sales_amount as decimal(10,2),",
+				"          sales_rank as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          sales_id,",
+				"          region,",
+				"          sales_amount,",
+				"          sales_rank",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

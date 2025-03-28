@@ -1,0 +1,111 @@
+{
+	"name": "df_de_task11",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_sales",
+						"type": "DatasetReference"
+					},
+					"name": "SalesCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_col_wise_trans",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TotalSales"
+				},
+				{
+					"name": "SelectRequiredCols"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Row ID} as integer,",
+				"          {Order ID} as string,",
+				"          {Order Date} as date 'dd-MM-yyyy',",
+				"          {Ship Date} as date 'dd-MM-yyyy',",
+				"          {Ship Mode} as string,",
+				"          {Customer ID} as string,",
+				"          {Customer Name} as string,",
+				"          Segment as string,",
+				"          City as string,",
+				"          State as string,",
+				"          Country as string,",
+				"          {Postal Code} as integer,",
+				"          Market as string,",
+				"          Region as string,",
+				"          {Product ID} as string,",
+				"          Category as string,",
+				"          {Sub-Category} as string,",
+				"          {Product Name} as string,",
+				"          Sales as double,",
+				"          Quantity as short,",
+				"          Discount as double,",
+				"          Profit as double,",
+				"          {Shipping Cost} as double,",
+				"          {Order Priority} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> SalesCSV",
+				"SalesCSV derive(total_sales = round(Quantity*Sales,0)) ~> TotalSales",
+				"TotalSales select(mapColumn(",
+				"          Order_ID = {Order ID},",
+				"          Order_Date = {Order Date},",
+				"          Customer_Name = {Customer Name},",
+				"          Segment,",
+				"          Product_Name = {Product Name},",
+				"          Price = Sales,",
+				"          Quantity,",
+				"          total_sales",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectRequiredCols",
+				"SelectRequiredCols sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          order_id as string,",
+				"          order_date as date,",
+				"          customer_name as string,",
+				"          segment as string,",
+				"          product_name as string,",
+				"          price as double,",
+				"          quantity as integer,",
+				"          total_sales as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          order_id = Order_ID,",
+				"          order_date = Order_Date,",
+				"          customer_name = Customer_Name,",
+				"          segment = Segment,",
+				"          product_name = Product_Name,",
+				"          price = Price,",
+				"          quantity = Quantity,",
+				"          total_sales",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

@@ -1,0 +1,78 @@
+{
+	"name": "df_de_task7",
+	"properties": {
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_de_invoices",
+						"type": "DatasetReference"
+					},
+					"name": "InvoiceCSV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "de_invoices",
+						"type": "DatasetReference"
+					},
+					"name": "LoadPgSQLDB"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TotalSaleByCategory"
+				},
+				{
+					"name": "SelectColumns"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          product_id as short,",
+				"          invoice_date as date,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          {_c4} as string,",
+				"          category as string,",
+				"          quantity as short,",
+				"          amount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> InvoiceCSV",
+				"InvoiceCSV aggregate(groupBy(category),",
+				"     total_sales = round(sum(amount*quantity),0)) ~> TotalSaleByCategory",
+				"TotalSaleByCategory select(mapColumn(",
+				"          category,",
+				"          total_sales",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectColumns",
+				"SelectColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          category as string,",
+				"          total_sales as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          category,",
+				"          total_sales",
+				"     )) ~> LoadPgSQLDB"
+			]
+		}
+	}
+}

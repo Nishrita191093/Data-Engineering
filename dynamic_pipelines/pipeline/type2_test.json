@@ -1,0 +1,62 @@
+{
+	"name": "type2_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_dynamic_scdtype_2_final",
+						"type": "DataFlowReference",
+						"parameters": {
+							"type1_pk_column": "'transaction_id'",
+							"source_table_name": "'transactions'",
+							"current_flag": "'current_flag'",
+							"insert_time_column_name": "'transactions_insert_time'",
+							"all_columns": "'payment_method'"
+						},
+						"datasetParameters": {
+							"Src": {
+								"SchemaName": "retail_schema",
+								"TableName": "transactions"
+							},
+							"tgtsrc": {
+								"TableName": "target_transactions",
+								"SchemaName": "retail_schema"
+							},
+							"TgtUpsert": {
+								"TableName": "target_transactions",
+								"SchemaName": "retail_schema"
+							},
+							"TgtUpdate": {
+								"TableName": "target_transactions",
+								"SchemaName": "retail_schema"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-20T16:50:13Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

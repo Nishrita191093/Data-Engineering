@@ -1,0 +1,28 @@
+{
+	"name": "SCR_PGSQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SrcTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@split(dataset().SrcTableName, '.')[0]",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@split(dataset().SrcTableName, '.')[1]",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

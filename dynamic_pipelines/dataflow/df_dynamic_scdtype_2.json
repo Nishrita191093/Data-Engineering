@@ -1,0 +1,165 @@
+{
+	"name": "df_dynamic_scdtype_2",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Retail_source",
+						"type": "DatasetReference"
+					},
+					"name": "Src"
+				},
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "tgtsrc"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "TgtUpsert"
+				},
+				{
+					"dataset": {
+						"referenceName": "Retail_target",
+						"type": "DatasetReference"
+					},
+					"name": "TgtUpdate"
+				}
+			],
+			"transformations": [
+				{
+					"name": "retaildataselect"
+				},
+				{
+					"name": "SrcHashed"
+				},
+				{
+					"name": "filterActv"
+				},
+				{
+					"name": "TgtHashed"
+				},
+				{
+					"name": "existInsert"
+				},
+				{
+					"name": "addStaticColumns"
+				},
+				{
+					"name": "InsertNew"
+				},
+				{
+					"name": "existtarget"
+				},
+				{
+					"name": "addStaticColumns1"
+				},
+				{
+					"name": "UpdateExisting"
+				},
+				{
+					"name": "pkexist"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     type1_pk_column as string ('transaction_id'),",
+				"     source_table_name as string,",
+				"     current_flag as string,",
+				"     insert_time_column_name as string,",
+				"     all_columns as string ('payment_method')",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Src",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> tgtsrc",
+				"Src select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> retaildataselect",
+				"retaildataselect derive(Hash = md5(\r",
+				"    concat(\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[0])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[1])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[2])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[3])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[4])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[5])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[6])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[7])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[8])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[9])), '')\r",
+				"    )\r",
+				")) ~> SrcHashed",
+				"tgtsrc filter(toString(byName(($current_flag)))=='Y') ~> filterActv",
+				"filterActv derive(Hash = md5(\r",
+				"    concat(\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[0])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[1])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[2])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[3])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[4])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[5])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[6])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[7])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[8])), ''), '|',\r",
+				"        coalesce(toString(byName(split($all_columns, ',')[9])), '')\r",
+				"    )\r",
+				")) ~> TgtHashed",
+				"SrcHashed, TgtHashed exists(SrcHashed@Hash==TgtHashed@Hash,",
+				"     negate:true,",
+				"     broadcast: 'left')~> existInsert",
+				"existInsert derive(start_date = currentTimestamp(),",
+				"          end_date = toTimestamp('9999-12-31', 'yyyy-MM-dd'),",
+				"          current_flag = 'Y') ~> addStaticColumns",
+				"addStaticColumns alterRow(upsertIf(true())) ~> InsertNew",
+				"pkexist, SrcHashed exists(TgtHashed@Hash !=SrcHashed@Hash,",
+				"     negate:false,",
+				"     broadcast: 'both')~> existtarget",
+				"existtarget derive(end_date = currentTimestamp(),",
+				"          current_flag = 'N') ~> addStaticColumns1",
+				"addStaticColumns1 alterRow(updateIf(true())) ~> UpdateExisting",
+				"TgtHashed, SrcHashed exists($type1_pk_column== $type1_pk_column,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> pkexist",
+				"InsertNew sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:[($type1_pk_column)],",
+				"     skipKeyWrites:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TgtUpsert",
+				"UpdateExisting sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:[($type1_pk_column)],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TgtUpdate"
+			]
+		}
+	}
+}

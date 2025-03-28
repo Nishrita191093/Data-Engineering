@@ -1,0 +1,20 @@
+{
+	"name": "db_website_traffic_stg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzurePostgreSql1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/Incremental_load"
+		},
+		"annotations": [],
+		"type": "AzurePostgreSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "arshad",
+			"table": "website_traffic_stg"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

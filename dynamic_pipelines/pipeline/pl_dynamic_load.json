@@ -1,0 +1,2383 @@
+{
+	"name": "pl_dynamic_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "lookup_master_table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "select source_table, target_table, timestamp_column_name, primary_key_column, load_type, md5_columns from arshad.master_table where status=true;",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "LOOKUP_PGSQL",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "arshad.master_table"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "scd1_loop",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filter_scd_1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filter_scd_1').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "scd1_start_time",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_start_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd_1",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_end_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_insreted_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_after_row_counts",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_inserted_row_count",
+								"value": {
+									"value": "@sub(variables('scd1_after_row_counts_target_table'), variables('scd1_before_row_counts_target_table'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_audit_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "scd1_no_change_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_audit_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.audit_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select\n'@{pipeline().RunId}' as run_id,\n'@{variables('scd1_start_time')}' as start_time,\n'@{variables('scd1_end_time')}' as end_time,\n'@{item().source_table}' as source_file_name,\n'@{item().target_table}' as target_table_name,\n'@{item().load_type}' as code_name,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.status}' as status,\n'@{variables('scd1_inserted_row_count')}' as inserted_row_count,\n'@{variables('scd1_updated_row_count')}' as updated_row_count,\n'@{variables('scd1_no_change_row_count')}' as no_change_row_count,\n'@{variables('scd1_start_time')}' as last_pulled_time;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "start_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "start_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "end_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "end_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "inserted_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "inserted_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "updated_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "updated_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "no_change_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "no_change_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "last_pulled_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "last_pulled_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_audit_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "scd1_error_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "scd_1",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_error_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.error_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select \n'@{item().load_type}' as code_name,\n'@{pipeline().RunId}' as run_id,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{item().target_table}' as target_table_name,\n'@{item().source_table}' as source_file_name,\n'@{variables('scd1_end_time')}' as execution_time,\n'@{replace(activity('scd_1').Error.Message, '''', '''''')}' as error_details;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "execution_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "execution_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_error_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "error_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "scd_1",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [
+								{
+									"activity": "scd1_start_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd1_before_row_counts",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd1_count_delta_records",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_scd_1",
+									"type": "DataFlowReference",
+									"parameters": {
+										"scd1_primary_key_column": {
+											"value": "'@{item().primary_key_column}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"SourceTables": {
+											"SrcTableName": {
+												"value": "@item().source_table",
+												"type": "Expression"
+											}
+										},
+										"TargetTable": {
+											"TgtTableName": {
+												"value": "@item().target_table",
+												"type": "Expression"
+											}
+										}
+									}
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine",
+								"runConcurrently": true
+							}
+						},
+						{
+							"name": "scd1_updated_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_insreted_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_updated_row_count",
+								"value": {
+									"value": "@sub(variables('scd1_delta_records'), variables('scd1_inserted_row_count'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_lookup_delta_records",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT COUNT(*) AS count\nFROM @{item().source_table}\nWHERE @{item().timestamp_column_name} > (\n    SELECT COALESCE(MAX(@{item().timestamp_column_name}), '2020-01-01 00:00:00'::timestamp)\n    FROM @{item().target_table}\n);",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": {
+											"value": "@item().target_table",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": true
+							}
+						},
+						{
+							"name": "scd1_before_row_counts",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_lookup_before_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_before_row_counts_target_table",
+								"value": {
+									"value": "@activity('scd1_lookup_before_row_count').output.firstRow.before_total_rows\n",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_lookup_before_row_count",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT COUNT(*) AS before_total_rows FROM @{item().target_table}\n",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": "@item().target_table"
+									}
+								}
+							}
+						},
+						{
+							"name": "scd1_lookup_after_row_counts",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "scd_1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT COUNT(*) AS after_total_rows\nFROM @{item().target_table};\n",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": "@item().target_table"
+									}
+								},
+								"firstRowOnly": true
+							}
+						},
+						{
+							"name": "scd1_after_row_counts",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_lookup_after_row_counts",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_after_row_counts_target_table",
+								"value": {
+									"value": "@activity('scd1_lookup_after_row_counts').output.firstRow.after_total_rows",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_count_delta_records",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_lookup_delta_records",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_delta_records",
+								"value": {
+									"value": "@activity('scd1_lookup_delta_records').output.firstRow.count\n",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd1_no_change_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd1_updated_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd1_no_change_row_count",
+								"value": {
+									"value": "@sub(variables('scd1_after_row_counts_target_table'), variables('scd1_delta_records'))",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "filter_scd_1",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lookup_master_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lookup_master_table').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().load_type, 'scd_1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "filter_inc_load",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lookup_master_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lookup_master_table').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().load_type, 'inc_load')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "incremental_loop",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filter_inc_load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filter_inc_load').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "incremental_load",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "inc_start_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT * FROM @{item().source_table}\nWHERE @{item().timestamp_column_name} > (\n    SELECT COALESCE(MAX(@{item().timestamp_column_name}), '2020-01-01 00:00:00'::timestamp)\n    FROM @{item().target_table}\n);",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SCR_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"SrcTableName": {
+											"value": "@item().source_table",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": {
+											"value": "@item().target_table",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "inc_start_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "inc_lookup_before_row_counts",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "inc_start_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "inc_end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "incremental_load",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "inc_end_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "inc_audit_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "incremental_load",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_audit_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.audit_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select\n'@{pipeline().RunId}' as run_id,\n'@{variables('inc_start_time')}' as start_time,\n'@{variables('inc_end_time')}' as end_time,\n'@{item().source_table}' as source_file_name,\n'@{item().target_table}' as target_table_name,\n'@{item().load_type}' as code_name,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.status}' as status,\n'@{activity('incremental_load').output.rowsCopied}' as inserted_row_count,\n'@{activity('inc_lookup_before_row_counts').output.firstRow.before_total_rows}' as no_change_row_count,\n'@{variables('inc_start_time')}' as last_pulled_time;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "start_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "start_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "end_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "end_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "inserted_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "inserted_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "no_change_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "no_change_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "last_pulled_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "last_pulled_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_audit_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "inc_error_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "incremental_load",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_error_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.error_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select \n'@{item().load_type}' as code_name,\n'@{pipeline().RunId}' as run_id,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{item().target_table}' as target_table_name,\n'@{item().source_table}' as source_file_name,\n'@{variables('inc_end_time')}' as execution_time,\n'@{replace(activity('incremental_load').Error.Message, '''', '''''')}' as error_details;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "execution_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "execution_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_error_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "error_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "inc_lookup_before_row_counts",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT COUNT(*) AS before_total_rows FROM @{item().target_table}\n",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": "@item().target_table"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "filter_scd_2",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lookup_master_table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lookup_master_table').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().load_type, 'scd_2')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "scd2_loop",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "filter_scd_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('filter_scd_2').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "scd2_start_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd2_lookup_status_column",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd2_lookup_source_pk",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd2_lookup_target_pk",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_start_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd_2",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_end_time",
+								"value": {
+									"value": "@formatDateTime(addMinutes(addHours(utcnow(), 5), 30), 'yyyy-MM-dd HH:mm:ss')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_insreted_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd2_updated_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_inserted_row_count",
+								"value": {
+									"value": "@sub(activity('scd_2').output.runStatus.metrics.LoadUpsert.rowsWritten,variables('scd2_updated_row_count'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_error_details",
+							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_error_details",
+								"value": {
+									"value": "@replace(\t\t\t\t\t\t\n   replace(\t\t\t\t\t\t\n      replace(\t\t\t\t\t\t\n         replace(\t\t\t\t\t\t\n            replace(activity('scd_2').Error.Message, '''', ''''''),\t\t\t\t\t\t\n            '\"', '\\\"'\t\t\t\t\t\t\n         ),\t\t\t\t\t\t\n         '(', ''\t\t\t\t\t\t\n      ),\t\t\t\t\t\t\n      ')', ''\t\t\t\t\t\t\n   ),\t\t\t\t\t\t\n   ',', ''\t\t\t\t\t\t\n)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_audit_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "scd2_no_change_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_audit_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.audit_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select\n'@{pipeline().RunId}' as run_id,\n'@{variables('scd2_start_time')}' as start_time,\n'@{variables('scd2_end_time')}' as end_time,\n'@{item().source_table}' as source_file_name,\n'@{item().target_table}' as target_table_name,\n'@{item().load_type}' as code_name,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.status}' as status,\n'@{variables('scd2_inserted_row_count')}' as inserted_row_count,\n'@{variables('scd2_updated_row_count')}' as updated_row_count,\n'@{variables('scd2_no_change_row_count')}' as no_change_row_count,\n'@{variables('scd2_start_time')}' as last_pulled_time;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "start_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "start_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "end_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "end_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "inserted_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "inserted_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "updated_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "updated_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "no_change_row_count",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "no_change_row_count",
+												"type": "Int32",
+												"physicalType": "integer"
+											}
+										},
+										{
+											"source": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "status",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "last_pulled_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "last_pulled_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_audit_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "audit_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "scd2_error_table",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "scd2_error_details",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd_2",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "arshad.dummy_error_table"
+								},
+								{
+									"name": "Destination",
+									"value": "arshad.error_table"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "select\n'@{pipeline().RunId}' as run_id,\n'@{item().source_table}' as source_file_name,\n'@{item().target_table}' as target_table_name,\n'@{item().load_type}' as code_name,\n'@{pipeline().parameters.schema_name}' as schema_name,\n'@{pipeline().parameters.source_system}' as source_system,\n'@{pipeline().parameters.status}' as status,\n'@{variables('scd2_end_time')}' as execution_time,\n'@{replace(activity('scd_2').Error.Message, '''', '''''')}' as error_details;",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzurePostgreSQLSink",
+									"writeBatchSize": 1000000,
+									"writeBatchTimeout": "00:30:00",
+									"writeMethod": "CopyCommand"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "code_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "run_id",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_system",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "schema_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "target_table_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "source_file_name",
+												"type": "String",
+												"physicalType": "text"
+											}
+										},
+										{
+											"source": {
+												"name": "execution_time",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "execution_time",
+												"type": "DateTime",
+												"physicalType": "timestamp without time zone"
+											}
+										},
+										{
+											"source": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											},
+											"sink": {
+												"name": "error_details",
+												"type": "String",
+												"physicalType": "text"
+											}
+										}
+									],
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dummy_error_table",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "error_table",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "scd_2",
+							"type": "ExecuteDataFlow",
+							"dependsOn": [
+								{
+									"activity": "scd2_start_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataflow": {
+									"referenceName": "df_scd_2",
+									"type": "DataFlowReference",
+									"parameters": {
+										"scd2_timestamp_column": {
+											"value": "'@{item().timestamp_column_name}'",
+											"type": "Expression"
+										},
+										"scd2_md5_columns": {
+											"value": "'@{item().md5_columns}'",
+											"type": "Expression"
+										},
+										"scd2_source_pk": {
+											"value": "'@{activity('scd2_lookup_source_pk').output.value[0].source_pk}'",
+											"type": "Expression"
+										},
+										"scd2_target_pk": {
+											"value": "'@{activity('scd2_lookup_target_pk').output.value[0].target_pk}'",
+											"type": "Expression"
+										},
+										"scd2_status_column": {
+											"value": "'@{activity('scd2_lookup_status_column').output.value[0].status_column}'",
+											"type": "Expression"
+										}
+									},
+									"datasetParameters": {
+										"SourceTables": {
+											"SrcTableName": {
+												"value": "@item().source_table",
+												"type": "Expression"
+											}
+										},
+										"TargetTables": {
+											"TgtTableName": {
+												"value": "@item().target_table",
+												"type": "Expression"
+											}
+										},
+										"LoadUpsert": {
+											"TgtTableName": {
+												"value": "@item().target_table",
+												"type": "Expression"
+											}
+										},
+										"LoadUpdate": {
+											"TgtTableName": "@item().target_table"
+										}
+									}
+								},
+								"compute": {
+									"coreCount": 8,
+									"computeType": "General"
+								},
+								"traceLevel": "Fine"
+							}
+						},
+						{
+							"name": "scd2_updated_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd_2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_updated_row_count",
+								"value": {
+									"value": "@activity('scd_2').output.runStatus.metrics.LoadUpdate.rowsWritten",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_lookup_after_row_counts",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "scd_2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT COUNT(*) AS after_total_rows\nFROM @{item().target_table};",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": "@item().target_table"
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "scd2_after_row_counts_target_table",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd2_lookup_after_row_counts",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_after_row_counts_target_table",
+								"value": {
+									"value": "@activity('scd2_lookup_after_row_counts').output.value[0].after_total_rows",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_delta_records",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd2_insreted_row_count",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "scd2_after_row_counts_target_table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_delta_records",
+								"value": {
+									"value": "@add(activity('scd_2').output.runStatus.metrics.LoadUpsert.rowsWritten, variables('scd2_updated_row_count'))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_lookup_status_column",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT active_column_name as status_column\nFROM arshad.master_table\nWHERE target_table= '@{item().target_table}';",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": {
+											"value": "arshad.master_table",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "scd2_no_change_row_count",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "scd2_delta_records",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "scd2_no_change_row_count",
+								"value": {
+									"value": "@sub(int(variables('scd2_after_row_counts_target_table')),\nint(variables('scd2_delta_records')))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "scd2_lookup_source_pk",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT primary_key_column as source_pk\nFROM arshad.master_table\nWHERE source_table= '@{item().source_table}';",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": {
+											"value": "arshad.master_table",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "scd2_lookup_target_pk",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzurePostgreSqlSource",
+									"query": {
+										"value": "SELECT primary_key_column as target_pk\nFROM arshad.master_table\nWHERE target_table= '@{item().target_table}';",
+										"type": "Expression"
+									},
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "TGT_PGSQL",
+									"type": "DatasetReference",
+									"parameters": {
+										"TgtTableName": {
+											"value": "arshad.master_table",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"status": {
+				"type": "string",
+				"defaultValue": "Success"
+			},
+			"source_system": {
+				"type": "string",
+				"defaultValue": "AzurePostgreSQL"
+			},
+			"schema_name": {
+				"type": "string",
+				"defaultValue": "arshad"
+			}
+		},
+		"variables": {
+			"inc_start_time": {
+				"type": "String"
+			},
+			"inc_end_time": {
+				"type": "String"
+			},
+			"scd1_primary_key_column": {
+				"type": "String"
+			},
+			"scd1_updated_row_count": {
+				"type": "Integer"
+			},
+			"scd1_start_time": {
+				"type": "String"
+			},
+			"scd1_last_pulled_time": {
+				"type": "String"
+			},
+			"scd1_end_time": {
+				"type": "String"
+			},
+			"scd1_source_file_name": {
+				"type": "String"
+			},
+			"scd1_target_table_name": {
+				"type": "String"
+			},
+			"scd1_inserted_row_count": {
+				"type": "Integer"
+			},
+			"scd1_error_details": {
+				"type": "String"
+			},
+			"scd1_timestamp_column_name": {
+				"type": "String"
+			},
+			"scd1_code_name": {
+				"type": "String"
+			},
+			"scd1_tgt_timestamp_column": {
+				"type": "String"
+			},
+			"scd2_start_time": {
+				"type": "String"
+			},
+			"scd2_source_file_name": {
+				"type": "String"
+			},
+			"scd2_target_table_name": {
+				"type": "String"
+			},
+			"scd2_primary_key_column": {
+				"type": "String"
+			},
+			"scd2_timestamp_column_name": {
+				"type": "String"
+			},
+			"scd2_code_name": {
+				"type": "String"
+			},
+			"scd2_end_time": {
+				"type": "String"
+			},
+			"scd2_inserted_row_count": {
+				"type": "Integer"
+			},
+			"scd2_updated_row_count": {
+				"type": "Integer"
+			},
+			"scd2_error_details": {
+				"type": "String"
+			},
+			"scd1_before_row_counts_target_table": {
+				"type": "Integer"
+			},
+			"scd1_after_row_counts_target_table": {
+				"type": "Integer"
+			},
+			"scd1_delta_records": {
+				"type": "Integer"
+			},
+			"scd1_no_change_row_count": {
+				"type": "Integer"
+			},
+			"scd1_previous_row_count": {
+				"type": "Integer"
+			},
+			"scd1_deleted_row_count": {
+				"type": "Integer"
+			},
+			"scd2_no_change_row_count": {
+				"type": "Integer"
+			},
+			"scd2_delta_records": {
+				"type": "Integer"
+			},
+			"scd2_before_row_counts_target_table": {
+				"type": "Integer"
+			},
+			"scd2_after_row_counts_target_table": {
+				"type": "Integer"
+			},
+			"scd2_md5_columns_array": {
+				"type": "Array"
+			},
+			"scd2_status_column": {
+				"type": "String"
+			},
+			"scd2_target_pk": {
+				"type": "String"
+			},
+			"scd2_source_pk": {
+				"type": "String"
+			},
+			"scd2_md5_columns": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-03-24T08:21:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

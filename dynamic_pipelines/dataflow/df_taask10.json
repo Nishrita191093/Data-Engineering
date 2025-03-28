@@ -1,0 +1,74 @@
+{
+	"name": "df_taask10",
+	"properties": {
+		"folder": {
+			"name": "df_Nishrita/df_tasks"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "task10_students",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "task10_tgtstudents",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "SortingbyRank"
+				},
+				{
+					"name": "filtertoprecords"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          student_id as integer,",
+				"          name as string,",
+				"          class as string,",
+				"          score as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 window(over(class),",
+				"     desc(score, true),",
+				"     top_rank = rank()) ~> SortingbyRank",
+				"SortingbyRank filter(top_rank <= 3) ~> filtertoprecords",
+				"filtertoprecords sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          student_id as integer,",
+				"          name as string,",
+				"          class as string,",
+				"          score as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          student_id,",
+				"          name,",
+				"          class,",
+				"          score,",
+				"          top_rank",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

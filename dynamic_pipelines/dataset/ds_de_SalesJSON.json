@@ -1,0 +1,100 @@
+{
+	"name": "ds_de_SalesJSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Arshad/DE_Tasks"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sales.json",
+				"folderPath": "DEtasks/datasets",
+				"fileSystem": "arsh"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"Row ID": {
+					"type": "string"
+				},
+				"Order ID": {
+					"type": "string"
+				},
+				"Order Date": {
+					"type": "string"
+				},
+				"Ship Date": {
+					"type": "string"
+				},
+				"Ship Mode": {
+					"type": "string"
+				},
+				"Customer ID": {
+					"type": "string"
+				},
+				"Customer Name": {
+					"type": "string"
+				},
+				"Segment": {
+					"type": "string"
+				},
+				"City": {
+					"type": "string"
+				},
+				"State": {
+					"type": "string"
+				},
+				"Country": {
+					"type": "string"
+				},
+				"Postal Code": {
+					"type": "string"
+				},
+				"Market": {
+					"type": "string"
+				},
+				"Region": {
+					"type": "string"
+				},
+				"Product ID": {
+					"type": "string"
+				},
+				"Category": {
+					"type": "string"
+				},
+				"Sub-Category": {
+					"type": "string"
+				},
+				"Product Name": {
+					"type": "string"
+				},
+				"Sales": {
+					"type": "string"
+				},
+				"Quantity": {
+					"type": "string"
+				},
+				"Discount": {
+					"type": "string"
+				},
+				"Profit": {
+					"type": "string"
+				},
+				"Shipping Cost": {
+					"type": "string"
+				},
+				"Order Priority": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

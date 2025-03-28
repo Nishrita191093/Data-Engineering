@@ -1,0 +1,16 @@
+{
+	"name": "RPA-Data-Engineering",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true",
+			"factoryStagingLSReferenceName": "AzureBlobStorage1",
+			"factoryStagingLSType": "LinkedServiceReference"
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2809447a-60fe-40ab-85f8-459ff902e157",
+		"tenantId": "45e42e43-0b36-4b71-9640-a9345114bff0"
+	}
+}

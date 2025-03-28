@@ -1,0 +1,34 @@
+{
+	"name": "task2_Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Nishrita/Tasks"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "sales.json",
+				"folderPath": "Input",
+				"container": "nishrita"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"region": {
+					"type": "string"
+				},
+				"sales": {
+					"type": "integer"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
