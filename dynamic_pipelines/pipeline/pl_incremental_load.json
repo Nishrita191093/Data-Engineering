@@ -1,0 +1,71 @@
+{
+	"name": "pl_incremental_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_1",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": "select max(insert_time) date1 from nishrita.orders_final ",
+						"partitionOption": "None"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Copy_data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup_1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzurePostgreSqlSource",
+						"query": {
+							"value": "SELECT order_id, name, city, email_id, insert_time\nFROM nishrita.orders\nWHERE insert_time > '@{formatDateTime(activity('Lookup_1').output.value[0].date1, 'yyyy-MM-ddTHH:mm:ss')}'\n\n",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzurePostgreSQLSink",
+						"writeBatchSize": 1000000,
+						"writeBatchTimeout": "00:30:00",
+						"writeMethod": "CopyCommand"
+					},
+					"enableStaging": false
+				}
+			}
+		],
+		"folder": {
+			"name": "pl_Nishrita"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-02-26T15:19:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
