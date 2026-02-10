@@ -1,0 +1,357 @@
+[2026-01-29T14:51:01.707+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-01-29T14:51:01.726+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-01-29T14:51:01.054443+00:00 [queued]>
+[2026-01-29T14:51:01.742+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-01-29T14:51:01.054443+00:00 [queued]>
+[2026-01-29T14:51:01.742+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2026-01-29T14:51:01.770+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): Silver_Dag_1> on 2026-01-29 14:51:01.054443+00:00
+[2026-01-29T14:51:01.787+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=10361) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-01-29T14:51:01.789+0000] {standard_task_runner.py:72} INFO - Started process 10362 to run task
+[2026-01-29T14:51:01.793+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'Silver_Dag_1', 'Silver_Dag_1', 'manual__2026-01-29T14:51:01.054443+00:00', '--job-id', '1185', '--raw', '--subdir', 'DAGS_FOLDER/silver_dag_1.py', '--cfg-path', '/tmp/tmprk2uu_0t']
+[2026-01-29T14:51:01.794+0000] {standard_task_runner.py:105} INFO - Job 1185: Subtask Silver_Dag_1
+[2026-01-29T14:51:01.859+0000] {task_command.py:467} INFO - Running <TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-01-29T14:51:01.054443+00:00 [running]> on host eff5ec4100e1
+[2026-01-29T14:51:01.969+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='Silver_Dag_1' AIRFLOW_CTX_TASK_ID='Silver_Dag_1' AIRFLOW_CTX_EXECUTION_DATE='2026-01-29T14:51:01.054443+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-01-29T14:51:01.054443+00:00'
+[2026-01-29T14:51:01.970+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-01-29T14:51:01.989+0000] {logging_mixin.py:190} INFO - RunId for this task instance: manual__2026-01-29T14:51:01.054443+00:00
+[2026-01-29T14:51:21.584+0000] {logging_mixin.py:190} INFO - ===== SPARK STDOUT =====
+[2026-01-29T14:51:21.585+0000] {logging_mixin.py:190} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Raw sys.argv: ['/opt/airflow/RedPluto-Data-Engineering-Tool/main_silver.py', 'manual__2026-01-29T14:51:01.054443+00:00', '{"user": "rpdet_az", "password": "***", "config_db": "config_db", "config_table": "config_table", "application_config": "application_config", "audit_table": "audit_table", "error_table": "error_table", "config_recon": "reconciliation_config", "data_dictionary_table": "data_dictionary_table", "recon_result": "recon_result", "DQ_config": "data_quality_config_table", "DQ_output": "data_quality_output_table", "url": "jdbc:postgresql://74.225.252.224:5432", "driver": "org.postgresql.Driver", "mysql_url": "jdbc:mysql://74.225.252.224:3306", "mysql_driver": "com.mysql.cj.jdbc.Driver", "reference_table": "reference_table", "log_path": "/opt/airflow/spark_logs", "dq_log_path": "/opt/airflow/data_quality_logs", "string_default": "NA", "int_default": 0, "date_default": "01/01/2099"}']
+app_prop: {'user': 'rpdet_az', 'password': '***', 'config_db': 'config_db', 'config_table': 'config_table', 'application_config': 'application_config', 'audit_table': 'audit_table', 'error_table': 'error_table', 'config_recon': 'reconciliation_config', 'data_dictionary_table': 'data_dictionary_table', 'recon_result': 'recon_result', 'DQ_config': 'data_quality_config_table', 'DQ_output': 'data_quality_output_table', 'url': 'jdbc:postgresql://74.225.252.224:5432', 'driver': 'org.postgresql.Driver', 'mysql_url': 'jdbc:mysql://74.225.252.224:3306', 'mysql_driver': 'com.mysql.cj.jdbc.Driver', 'reference_table': 'reference_table', 'log_path': '/opt/airflow/spark_logs', 'dq_log_path': '/opt/airflow/data_quality_logs', 'string_default': 'NA', 'int_default': 0, 'date_default': '01/01/2099'}
+2026-01-29 14:51:18,898 - INFO - Fetching config table
+2026-01-29 14:51:21,088 - INFO - Enriching config data with target application name
+Traceback (most recent call last):
+  File "/opt/airflow/RedPluto-Data-Engineering-Tool/main_silver.py", line 81, in <module>
+    config_def(run_id, app_prop)
+  File "/opt/airflow/RedPluto-Data-Engineering-Tool/main_silver.py", line 49, in config_def
+    application_config_data.select(
+    ^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'application_config_data' is not defined
+[2026-01-29T14:51:21.586+0000] {logging_mixin.py:190} INFO - ===== SPARK STDERR =====
+[2026-01-29T14:51:21.586+0000] {logging_mixin.py:190} INFO - Ivy Default Cache set to: /home/airflow/.ivy2/cache
+The jars for the packages stored in: /home/airflow/.ivy2/jars
+com.crealytics#spark-excel_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-65f94c01-0511-4e78-ba24-684459e6c0d1;1.0
+	confs: [default]
+	found com.crealytics#spark-excel_2.12;0.13.5 in central
+	found org.apache.poi#poi;4.1.2 in central
+	found commons-codec#commons-codec;1.13 in central
+	found org.apache.commons#commons-collections4;4.4 in central
+	found org.apache.commons#commons-math3;3.6.1 in central
+	found com.zaxxer#SparseBitSet;1.2 in central
+	found org.apache.poi#poi-ooxml;4.1.2 in central
+	found org.apache.poi#poi-ooxml-schemas;4.1.2 in central
+	found org.apache.xmlbeans#xmlbeans;3.1.0 in central
+	found com.github.virtuald#curvesapi;1.06 in central
+	found com.norbitltd#spoiwo_2.12;1.7.0 in central
+	found org.scala-lang.modules#scala-xml_2.12;1.2.0 in central
+	found com.github.pjfanning#excel-streaming-reader;2.3.4 in central
+	found com.github.pjfanning#poi-shared-strings;1.0.4 in central
+	found com.h2database#h2;1.4.200 in central
+	found org.apache.commons#commons-text;1.8 in central
+	found org.apache.commons#commons-lang3;3.9 in central
+	found xml-apis#xml-apis;1.4.01 in central
+	found org.slf4j#slf4j-api;1.7.30 in central
+	found org.apache.commons#commons-compress;1.20 in central
+	found com.fasterxml.jackson.core#jackson-core;2.8.8 in central
+:: resolution report :: resolve 2256ms :: artifacts dl 77ms
+	:: modules in use:
+	com.crealytics#spark-excel_2.12;0.13.5 from central in [default]
+	com.fasterxml.jackson.core#jackson-core;2.8.8 from central in [default]
+	com.github.pjfanning#excel-streaming-reader;2.3.4 from central in [default]
+	com.github.pjfanning#poi-shared-strings;1.0.4 from central in [default]
+	com.github.virtuald#curvesapi;1.06 from central in [default]
+	com.h2database#h2;1.4.200 from central in [default]
+	com.norbitltd#spoiwo_2.12;1.7.0 from central in [default]
+	com.zaxxer#SparseBitSet;1.2 from central in [default]
+	commons-codec#commons-codec;1.13 from central in [default]
+	org.apache.commons#commons-collections4;4.4 from central in [default]
+	org.apache.commons#commons-compress;1.20 from central in [default]
+	org.apache.commons#commons-lang3;3.9 from central in [default]
+	org.apache.commons#commons-math3;3.6.1 from central in [default]
+	org.apache.commons#commons-text;1.8 from central in [default]
+	org.apache.poi#poi;4.1.2 from central in [default]
+	org.apache.poi#poi-ooxml;4.1.2 from central in [default]
+	org.apache.poi#poi-ooxml-schemas;4.1.2 from central in [default]
+	org.apache.xmlbeans#xmlbeans;3.1.0 from central in [default]
+	org.scala-lang.modules#scala-xml_2.12;1.2.0 from central in [default]
+	org.slf4j#slf4j-api;1.7.30 from central in [default]
+	xml-apis#xml-apis;1.4.01 from central in [default]
+	:: evicted modules:
+	org.apache.commons#commons-compress;1.19 by [org.apache.commons#commons-compress;1.20] in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   22  |   0   |   0   |   1   ||   21  |   0   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-65f94c01-0511-4e78-ba24-684459e6c0d1
+	confs: [default]
+	0 artifacts copied, 21 already retrieved (0kB/47ms)
+26/01/29 14:51:08 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/01/29 14:51:13 INFO SparkContext: Running Spark version 3.5.5
+26/01/29 14:51:13 INFO SparkContext: OS info Linux, 6.14.0-1017-azure, amd64
+26/01/29 14:51:13 INFO SparkContext: Java version 17.0.16
+26/01/29 14:51:13 INFO ResourceUtils: ==============================================================
+26/01/29 14:51:13 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/01/29 14:51:13 INFO ResourceUtils: ==============================================================
+26/01/29 14:51:13 INFO SparkContext: Submitted application: audit
+26/01/29 14:51:13 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/01/29 14:51:13 INFO ResourceProfile: Limiting resource is cpu
+26/01/29 14:51:13 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/01/29 14:51:13 INFO SecurityManager: Changing view acls to: default
+26/01/29 14:51:13 INFO SecurityManager: Changing modify acls to: default
+26/01/29 14:51:13 INFO SecurityManager: Changing view acls groups to: 
+26/01/29 14:51:13 INFO SecurityManager: Changing modify acls groups to: 
+26/01/29 14:51:13 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: default; groups with view permissions: EMPTY; users with modify permissions: default; groups with modify permissions: EMPTY
+26/01/29 14:51:14 INFO Utils: Successfully started service 'sparkDriver' on port 35207.
+26/01/29 14:51:14 INFO SparkEnv: Registering MapOutputTracker
+26/01/29 14:51:14 INFO SparkEnv: Registering BlockManagerMaster
+26/01/29 14:51:14 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/01/29 14:51:14 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/01/29 14:51:14 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/01/29 14:51:14 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-0f684c2e-9e1c-48a0-aa35-a54ea0578c95
+26/01/29 14:51:14 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+26/01/29 14:51:14 INFO SparkEnv: Registering OutputCommitCoordinator
+26/01/29 14:51:14 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/01/29 14:51:14 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/01/29 14:51:14 ERROR SparkContext: Failed to add mysql-connector-j-8.0.33.jar to Spark environment
+java.io.FileNotFoundException: Jar /opt/airflow/mysql-connector-j-8.0.33.jar not found
+	at org.apache.spark.SparkContext.addLocalJarFile$1(SparkContext.scala:2095)
+	at org.apache.spark.SparkContext.addJar(SparkContext.scala:2151)
+	at org.apache.spark.SparkContext.$anonfun$new$15(SparkContext.scala:521)
+	at org.apache.spark.SparkContext.$anonfun$new$15$adapted(SparkContext.scala:521)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:521)
+	at org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:238)
+	at py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+	at py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar at file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.crealytics_spark-excel_2.12-0.13.5.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-4.1.2.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-ooxml-4.1.2.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar at file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.norbitltd_spoiwo_2.12-1.7.0.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar at file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.pjfanning_excel-streaming-reader-2.3.4.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar at file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.pjfanning_poi-shared-strings-1.0.4.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-compress-1.20.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar at file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.fasterxml.jackson.core_jackson-core-2.8.8.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar at file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/commons-codec_commons-codec-1.13.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-collections4-4.4.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-math3-3.6.1.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar at file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.zaxxer_SparseBitSet-1.2.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-ooxml-schemas-4.1.2.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar at file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.virtuald_curvesapi-1.06.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar at file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.xmlbeans_xmlbeans-3.1.0.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar at file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar at file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/xml-apis_xml-apis-1.4.01.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar at file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.slf4j_slf4j-api-1.7.30.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar at file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.h2database_h2-1.4.200.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-text-1.8.jar
+26/01/29 14:51:14 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar with timestamp 1769698273259
+26/01/29 14:51:14 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-lang3-3.9.jar
+26/01/29 14:51:15 INFO Executor: Starting executor ID driver on host eff5ec4100e1
+26/01/29 14:51:15 INFO Executor: OS info Linux, 6.14.0-1017-azure, amd64
+26/01/29 14:51:15 INFO Executor: Java version 17.0.16
+26/01/29 14:51:15 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/01/29 14:51:15 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@11ca564e for default.
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/commons-codec_commons-codec-1.13.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/xml-apis_xml-apis-1.4.01.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.zaxxer_SparseBitSet-1.2.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-compress-1.20.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.slf4j_slf4j-api-1.7.30.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.xmlbeans_xmlbeans-3.1.0.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-ooxml-4.1.2.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.virtuald_curvesapi-1.06.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.crealytics_spark-excel_2.12-0.13.5.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-collections4-4.4.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.pjfanning_poi-shared-strings-1.0.4.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.h2database_h2-1.4.200.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-math3-3.6.1.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.github.pjfanning_excel-streaming-reader-2.3.4.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.fasterxml.jackson.core_jackson-core-2.8.8.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-lang3-3.9.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-ooxml-schemas-4.1.2.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/com.norbitltd_spoiwo_2.12-1.7.0.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.poi_poi-4.1.2.jar
+26/01/29 14:51:15 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar with timestamp 1769698273259
+26/01/29 14:51:15 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar has been previously copied to /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/userFiles-5a5bbb1a-8151-46f8-821e-b580258ae18f/org.apache.commons_commons-text-1.8.jar
+26/01/29 14:51:15 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39649.
+26/01/29 14:51:15 INFO NettyBlockTransferService: Server created on eff5ec4100e1:39649
+26/01/29 14:51:15 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/01/29 14:51:15 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, eff5ec4100e1, 39649, None)
+26/01/29 14:51:15 INFO BlockManagerMasterEndpoint: Registering block manager eff5ec4100e1:39649 with 434.4 MiB RAM, BlockManagerId(driver, eff5ec4100e1, 39649, None)
+26/01/29 14:51:15 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, eff5ec4100e1, 39649, None)
+26/01/29 14:51:15 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, eff5ec4100e1, 39649, None)
+26/01/29 14:51:16 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+26/01/29 14:51:16 INFO SharedState: Warehouse path is 'file:/opt/airflow/spark-warehouse'.
+26/01/29 14:51:17 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:17 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:17 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:18 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/01/29 14:51:21 INFO SparkContext: Invoking stop() from shutdown hook
+26/01/29 14:51:21 INFO SparkContext: SparkContext is stopping with exitCode 0.
+26/01/29 14:51:21 INFO SparkUI: Stopped Spark web UI at http://eff5ec4100e1:4040
+26/01/29 14:51:21 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+26/01/29 14:51:21 INFO MemoryStore: MemoryStore cleared
+26/01/29 14:51:21 INFO BlockManager: BlockManager stopped
+26/01/29 14:51:21 INFO BlockManagerMaster: BlockManagerMaster stopped
+26/01/29 14:51:21 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+26/01/29 14:51:21 INFO SparkContext: Successfully stopped SparkContext
+26/01/29 14:51:21 INFO ShutdownHookManager: Shutdown hook called
+26/01/29 14:51:21 INFO ShutdownHookManager: Deleting directory /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536
+26/01/29 14:51:21 INFO ShutdownHookManager: Deleting directory /tmp/spark-cb83deef-1587-4b3f-a532-941e9d008536/pyspark-d16c4c19-0ba1-49ab-b51a-99c6d90572f2
+26/01/29 14:51:21 INFO ShutdownHookManager: Deleting directory /tmp/spark-e4707faf-9a38-425a-bb64-fce6a5a37463
+[2026-01-29T14:51:21.587+0000] {taskinstance.py:3311} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 767, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 733, in _execute_callable
+    return ExecutionCallableRunner(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 422, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/silver_dag_1.py", line 46, in Silver_Dag_1
+    raise RuntimeError(
+RuntimeError: Spark job failed with return code 1
+[2026-01-29T14:51:21.598+0000] {taskinstance.py:1225} INFO - Marking task as FAILED. dag_id=Silver_Dag_1, task_id=Silver_Dag_1, run_id=manual__2026-01-29T14:51:01.054443+00:00, execution_date=20260129T145101, start_date=20260129T145101, end_date=20260129T145121
+[2026-01-29T14:51:21.611+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-01-29T14:51:21.612+0000] {standard_task_runner.py:124} ERROR - Failed to execute job 1185 for task Silver_Dag_1 (Spark job failed with return code 1; 10362)
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py", line 117, in _start_by_fork
+    ret = args.func(args, dag=self.dag)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/cli_config.py", line 49, in command
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/cli.py", line 116, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 483, in task_run
+    task_return_code = _run_task_by_selected_method(args, _dag, ti)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 256, in _run_task_by_selected_method
+    return _run_raw_task(args, ti)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/cli/commands/task_command.py", line 341, in _run_raw_task
+    return ti._run_raw_task(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/session.py", line 97, in wrapper
+    return func(*args, session=session, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3005, in _run_raw_task
+    return _run_raw_task(
+           ^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 273, in _run_raw_task
+    TaskInstance._execute_task_with_callbacks(
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3159, in _execute_task_with_callbacks
+    result = self._execute_task(context, task_orig)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 3183, in _execute_task
+    return _execute_task(self, context, task_orig)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 767, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 733, in _execute_callable
+    return ExecutionCallableRunner(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 422, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 238, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 256, in execute_callable
+    return runner.run(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/utils/operator_helpers.py", line 252, in run
+    return self.func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/silver_dag_1.py", line 46, in Silver_Dag_1
+    raise RuntimeError(
+RuntimeError: Spark job failed with return code 1
+[2026-01-29T14:51:21.644+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 1
+[2026-01-29T14:51:21.658+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-01-29T14:51:21.663+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
