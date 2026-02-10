@@ -1,0 +1,62 @@
+[2026-02-09T11:50:22.661+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-09T11:50:22.682+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:50:22.044361+00:00 [queued]>
+[2026-02-09T11:50:22.688+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:50:22.044361+00:00 [queued]>
+[2026-02-09T11:50:22.688+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2026-02-09T11:50:22.704+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): Data_Reconciliation_Dag_1> on 2026-02-09 11:50:22.044361+00:00
+[2026-02-09T11:50:22.713+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=9035) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-09T11:50:22.714+0000] {standard_task_runner.py:72} INFO - Started process 9036 to run task
+[2026-02-09T11:50:22.715+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'Data_Reconciliation_Dag_1', 'Data_Reconciliation_Dag_1', 'manual__2026-02-09T11:50:22.044361+00:00', '--job-id', '1316', '--raw', '--subdir', 'DAGS_FOLDER/data_reconciliation_dag_1.py', '--cfg-path', '/tmp/tmp7dakcz0a']
+[2026-02-09T11:50:22.716+0000] {standard_task_runner.py:105} INFO - Job 1316: Subtask Data_Reconciliation_Dag_1
+[2026-02-09T11:50:22.778+0000] {task_command.py:467} INFO - Running <TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:50:22.044361+00:00 [running]> on host eff5ec4100e1
+[2026-02-09T11:50:22.906+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_TASK_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_EXECUTION_DATE='2026-02-09T11:50:22.044361+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-09T11:50:22.044361+00:00'
+[2026-02-09T11:50:22.909+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-09T11:50:22.927+0000] {logging_mixin.py:190} INFO - RunId for this task instance: manual__2026-02-09T11:50:22.044361+00:00
+[2026-02-09T11:50:41.419+0000] {python.py:240} INFO - Done. Returned value was: :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+2026-02-09 11:50:33,938 - INFO - Reading Reconciliation Config Table
+2026-02-09 11:50:40,372 - INFO - Looping through Recon Config Table Arguments
+2026-02-09 11:50:40,373 - INFO - Running COUNT CHECK
+2026-02-09 11:50:40,373 - INFO - Executing query: SELECT COUNT (*) FROM school_bronze.student_info;
+2026-02-09 11:50:40,981 - ERROR - Error in reconciliation_check: An error occurred while calling o41.executeQuery.
+: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) FROM school_bronze.student_info' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeQuery(StatementImpl.java:1200)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2026-02-09 11:50:40,981 - ERROR - Reconciliation failed for recon_key 917: An error occurred while calling o41.executeQuery.
+: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '*) FROM school_bronze.student_info' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.StatementImpl.executeQuery(StatementImpl.java:1200)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+
+[2026-02-09T11:50:41.456+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-09T11:50:41.456+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=Data_Reconciliation_Dag_1, task_id=Data_Reconciliation_Dag_1, run_id=manual__2026-02-09T11:50:22.044361+00:00, execution_date=20260209T115022, start_date=20260209T115022, end_date=20260209T115041
+[2026-02-09T11:50:41.505+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-09T11:50:41.533+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-02-09T11:50:41.536+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

@@ -1,0 +1,28 @@
+[2026-02-09T11:31:05.359+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-09T11:31:05.382+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:31:04.740106+00:00 [queued]>
+[2026-02-09T11:31:05.388+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:31:04.740106+00:00 [queued]>
+[2026-02-09T11:31:05.388+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2026-02-09T11:31:05.406+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): Data_Reconciliation_Dag_1> on 2026-02-09 11:31:04.740106+00:00
+[2026-02-09T11:31:05.418+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=7636) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-09T11:31:05.420+0000] {standard_task_runner.py:72} INFO - Started process 7637 to run task
+[2026-02-09T11:31:05.421+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'Data_Reconciliation_Dag_1', 'Data_Reconciliation_Dag_1', 'manual__2026-02-09T11:31:04.740106+00:00', '--job-id', '1310', '--raw', '--subdir', 'DAGS_FOLDER/data_reconciliation_dag_1.py', '--cfg-path', '/tmp/tmpa4gjx8b1']
+[2026-02-09T11:31:05.422+0000] {standard_task_runner.py:105} INFO - Job 1310: Subtask Data_Reconciliation_Dag_1
+[2026-02-09T11:31:05.477+0000] {task_command.py:467} INFO - Running <TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-09T11:31:04.740106+00:00 [running]> on host eff5ec4100e1
+[2026-02-09T11:31:05.593+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_TASK_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_EXECUTION_DATE='2026-02-09T11:31:04.740106+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-09T11:31:04.740106+00:00'
+[2026-02-09T11:31:05.596+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-09T11:31:05.617+0000] {logging_mixin.py:190} INFO - RunId for this task instance: manual__2026-02-09T11:31:04.740106+00:00
+[2026-02-09T11:31:30.608+0000] {python.py:240} INFO - Done. Returned value was: :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+2026-02-09 11:31:24,407 - INFO - Reading Reconciliation Config Table
+try
+2026-02-09 11:31:30,038 - INFO - Looping through Recon Config Table Arguments
+2026-02-09 11:31:30,038 - INFO - Calling reconciliation_check for recon_type count check
+2026-02-09 11:31:30,038 - INFO - Calling reconciliation_check for source result(count check)
+2026-02-09 11:31:30,038 - INFO - error in count check logicname 'query' is not defined
+
+[2026-02-09T11:31:30.635+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-09T11:31:30.635+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=Data_Reconciliation_Dag_1, task_id=Data_Reconciliation_Dag_1, run_id=manual__2026-02-09T11:31:04.740106+00:00, execution_date=20260209T113104, start_date=20260209T113105, end_date=20260209T113130
+[2026-02-09T11:31:30.675+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-09T11:31:30.692+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-02-09T11:31:30.694+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

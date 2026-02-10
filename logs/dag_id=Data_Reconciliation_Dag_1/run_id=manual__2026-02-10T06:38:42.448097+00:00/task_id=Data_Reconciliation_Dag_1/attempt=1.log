@@ -1,0 +1,75 @@
+[2026-02-10T06:38:43.251+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-10T06:38:43.272+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-10T06:38:42.448097+00:00 [queued]>
+[2026-02-10T06:38:43.278+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-10T06:38:42.448097+00:00 [queued]>
+[2026-02-10T06:38:43.278+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2026-02-10T06:38:43.296+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): Data_Reconciliation_Dag_1> on 2026-02-10 06:38:42.448097+00:00
+[2026-02-10T06:38:43.311+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'Data_Reconciliation_Dag_1', 'Data_Reconciliation_Dag_1', 'manual__2026-02-10T06:38:42.448097+00:00', '--job-id', '1326', '--raw', '--subdir', 'DAGS_FOLDER/data_reconciliation_dag_1.py', '--cfg-path', '/tmp/tmpogalpkdi']
+[2026-02-10T06:38:43.312+0000] {standard_task_runner.py:105} INFO - Job 1326: Subtask Data_Reconciliation_Dag_1
+[2026-02-10T06:38:43.308+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=2353) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-10T06:38:43.313+0000] {standard_task_runner.py:72} INFO - Started process 2354 to run task
+[2026-02-10T06:38:43.379+0000] {task_command.py:467} INFO - Running <TaskInstance: Data_Reconciliation_Dag_1.Data_Reconciliation_Dag_1 manual__2026-02-10T06:38:42.448097+00:00 [running]> on host eff5ec4100e1
+[2026-02-10T06:38:43.515+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_TASK_ID='Data_Reconciliation_Dag_1' AIRFLOW_CTX_EXECUTION_DATE='2026-02-10T06:38:42.448097+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-10T06:38:42.448097+00:00'
+[2026-02-10T06:38:43.516+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-10T06:38:43.536+0000] {logging_mixin.py:190} INFO - RunId for this task instance: manual__2026-02-10T06:38:42.448097+00:00
+[2026-02-10T06:39:09.030+0000] {python.py:240} INFO - Done. Returned value was: :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+2026-02-10 06:39:00,785 - INFO - Reading Reconciliation Config Table
+try
+2026-02-10 06:39:07,255 - INFO - Looping through Recon Config Table Arguments
+2026-02-10 06:39:07,255 - INFO - Calling reconciliation_check for recon_type count check
+2026-02-10 06:39:07,255 - INFO - Running count check query: SELECT COUNT(*) AS source_count FROM silver.student_info
+2026-02-10 06:39:07,255 - INFO - Calling reconciliation_check for source result(count check)
+2026-02-10 06:39:07,255 - INFO - Executing query: SELECT COUNT(*) AS source_count FROM silver.student_info
+2026-02-10 06:39:08,058 - ERROR - Error in reconciliation_check: An error occurred while calling z:java.sql.DriverManager.getConnection.
+: java.sql.SQLSyntaxErrorException: Unknown database 'silver'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:681)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:229)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+2026-02-10 06:39:08,059 - INFO - error in count check logicAn error occurred while calling z:java.sql.DriverManager.getConnection.
+: java.sql.SQLSyntaxErrorException: Unknown database 'silver'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:681)
+	at java.sql/java.sql.DriverManager.getConnection(DriverManager.java:229)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:282)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+
+
+[2026-02-10T06:39:09.066+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-10T06:39:09.066+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=Data_Reconciliation_Dag_1, task_id=Data_Reconciliation_Dag_1, run_id=manual__2026-02-10T06:38:42.448097+00:00, execution_date=20260210T063842, start_date=20260210T063843, end_date=20260210T063909
+[2026-02-10T06:39:09.142+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-10T06:39:09.170+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-02-10T06:39:09.173+0000] {local_task_job_runner.py:245} INFO - ::endgroup::

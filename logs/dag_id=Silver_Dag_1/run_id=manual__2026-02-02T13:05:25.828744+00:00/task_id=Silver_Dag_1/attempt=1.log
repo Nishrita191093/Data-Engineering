@@ -1,0 +1,1160 @@
+[2026-02-02T13:05:26.505+0000] {local_task_job_runner.py:123} INFO - ::group::Pre task execution logs
+[2026-02-02T13:05:26.526+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-02-02T13:05:25.828744+00:00 [queued]>
+[2026-02-02T13:05:26.533+0000] {taskinstance.py:2613} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-02-02T13:05:25.828744+00:00 [queued]>
+[2026-02-02T13:05:26.533+0000] {taskinstance.py:2866} INFO - Starting attempt 1 of 1
+[2026-02-02T13:05:26.548+0000] {taskinstance.py:2889} INFO - Executing <Task(PythonOperator): Silver_Dag_1> on 2026-02-02 13:05:25.828744+00:00
+[2026-02-02T13:05:26.559+0000] {warnings.py:112} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:70: DeprecationWarning: This process (pid=6862) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2026-02-02T13:05:26.561+0000] {standard_task_runner.py:72} INFO - Started process 6863 to run task
+[2026-02-02T13:05:26.564+0000] {standard_task_runner.py:104} INFO - Running: ['airflow', 'tasks', 'run', 'Silver_Dag_1', 'Silver_Dag_1', 'manual__2026-02-02T13:05:25.828744+00:00', '--job-id', '1228', '--raw', '--subdir', 'DAGS_FOLDER/silver_dag_1.py', '--cfg-path', '/tmp/tmpymi_c9f4']
+[2026-02-02T13:05:26.565+0000] {standard_task_runner.py:105} INFO - Job 1228: Subtask Silver_Dag_1
+[2026-02-02T13:05:26.623+0000] {task_command.py:467} INFO - Running <TaskInstance: Silver_Dag_1.Silver_Dag_1 manual__2026-02-02T13:05:25.828744+00:00 [running]> on host eff5ec4100e1
+[2026-02-02T13:05:26.741+0000] {taskinstance.py:3132} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='airflow' AIRFLOW_CTX_DAG_ID='Silver_Dag_1' AIRFLOW_CTX_TASK_ID='Silver_Dag_1' AIRFLOW_CTX_EXECUTION_DATE='2026-02-02T13:05:25.828744+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-02-02T13:05:25.828744+00:00'
+[2026-02-02T13:05:26.742+0000] {taskinstance.py:731} INFO - ::endgroup::
+[2026-02-02T13:05:26.761+0000] {logging_mixin.py:190} INFO - RunId for this task instance: manual__2026-02-02T13:05:25.828744+00:00
+[2026-02-02T13:06:09.870+0000] {logging_mixin.py:190} INFO - ===== SPARK STDOUT =====
+[2026-02-02T13:06:09.874+0000] {logging_mixin.py:190} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Raw sys.argv: ['/opt/airflow/RedPluto-Data-Engineering-Tool/main_silver.py', 'manual__2026-02-02T13:05:25.828744+00:00', '{"user": "rpdet_az", "password": "***", "config_db": "config_db", "config_table": "config_table", "application_config": "application_config", "audit_table": "audit_table", "error_table": "error_table", "config_recon": "reconciliation_config", "data_dictionary_table": "data_dictionary_table", "recon_result": "recon_result", "DQ_config": "data_quality_config_table", "DQ_output": "data_quality_output_table", "url": "jdbc:postgresql://74.225.252.224:5432", "driver": "org.postgresql.Driver", "mysql_url": "jdbc:mysql://74.225.252.224:3306", "mysql_driver": "com.mysql.cj.jdbc.Driver", "reference_table": "reference_table", "log_path": "/opt/airflow/spark_logs", "dq_log_path": "/opt/airflow/data_quality_logs", "string_default": "NA", "int_default": 0, "date_default": "01/01/2099"}']
+app_prop: {'user': 'rpdet_az', 'password': '***', 'config_db': 'config_db', 'config_table': 'config_table', 'application_config': 'application_config', 'audit_table': 'audit_table', 'error_table': 'error_table', 'config_recon': 'reconciliation_config', 'data_dictionary_table': 'data_dictionary_table', 'recon_result': 'recon_result', 'DQ_config': 'data_quality_config_table', 'DQ_output': 'data_quality_output_table', 'url': 'jdbc:postgresql://74.225.252.224:5432', 'driver': 'org.postgresql.Driver', 'mysql_url': 'jdbc:mysql://74.225.252.224:3306', 'mysql_driver': 'com.mysql.cj.jdbc.Driver', 'reference_table': 'reference_table', 'log_path': '/opt/airflow/spark_logs', 'dq_log_path': '/opt/airflow/data_quality_logs', 'string_default': 'NA', 'int_default': 0, 'date_default': '01/01/2099'}
+2026-02-02 13:05:45,571 - INFO - Fetching config table
+2026-02-02 13:05:48,097 - INFO - Fetching application config table
+2026-02-02 13:05:48,275 - INFO - Enriching config data with target application name
+2026-02-02 13:05:48,573 - INFO - Fetching Silver Tables
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|config_key|execution_layer|source_system|source_type|source_file_path|source_file_name|source_file_delimiter|source_schema_name|   source_table_name|target_type|target_file_path|target_file_delimiter|target_schema_name|temporary_target_table|   target_table_name|    load_type|      primary_key|effective_date_column|         md5_columns|         custom_code|execution_sequence|enable_dynamic_schema|active_flag|full_data_refresh_flag|source_connection_id|target_layer|target_system|target_connection_id|source_application_id|target_application_id|          created_at|          updated_at|target_application_name|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|        11|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|             address|      table|              NA|                   NA|  insurance_silver|                    NA|             address|         SCD1|        AddressID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        12|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|               claim|      table|              NA|                   NA|  insurance_silver|                    NA|               claim|         SCD1|          ClaimID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        13|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|            coverage|      table|              NA|                   NA|  insurance_silver|                    NA|            coverage|         SCD1|       CoverageID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        14|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|             payment|      table|              NA|                   NA|  insurance_silver|          temp_payment|             payment|         SCD2|        PaymentID|         last_updated|PaymentID,Custome...|                  NA|                NA|                    Y|          N|                     Y|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        15|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|              policy|      table|              NA|                   NA|  insurance_silver|           temp_policy|              policy|         SCD2|         PolicyID|         last_updated|PolicyID,Customer...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        16|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|            customer|      table|              NA|                   NA|  insurance_silver|         temp_customer|            customer|         SCD1|       CustomerID|         last_updated|CustomerID,FirstN...|Data_Transformati...|              post|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        36|         silver|        mysql|      table|              NA|              NA|                    N|    banking_bronze|           customers|      table|              NA|                   NA|    banking_silver|        temp_customers|           customers|         SCD1|      customer_id|         last_updated|customer_id,first...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       100|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|              assets|      table|              NA|                   NA|  office_db_silver|           temp_assets|              assets|truncate_load|         asset_id|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       101|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|     client_projects|      table|              NA|                   NA|  office_db_silver|  temp_client_projects|     client_projects|truncate_load|client_project_id|         last_updated|client project_id...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       102|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|             clients|      table|              NA|                   NA|  office_db_silver|          temp_clients|             clients|truncate_load|        client_id|         last_updated|client_id, client...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       103|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|         departments|      table|              NA|                   NA|  office_db_silver|      temp_departments|         departments|truncate_load|    department_id|         last_updated|department_id, de...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       104|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|           employees|      table|              NA|                   NA|  office_db_silver|        temp_employees|           employees|truncate_load|      employee_id|         last_updated|employee_id, firs...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       105|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|   meeting_attendees|      table|              NA|                   NA|  office_db_silver|  temp_meeting_atte...|   meeting_attendees|truncate_load|    attendance_id|         last_updated|attendance_id, me...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       106|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            meetings|      table|              NA|                   NA|  office_db_silver|         temp_meetings|            meetings|truncate_load|       meeting_id|         last_updated|meeting_id, title...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       107|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze| project_assignments|      table|              NA|                   NA|  office_db_silver|  temp_project_assi...| project_assignments|truncate_load|    assignment_id|         last_updated|assignment_id, pr...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       108|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            projects|      table|              NA|                   NA|  office_db_silver|         temp_projects|            projects|truncate_load|       project_id|         last_updated|project_id,projec...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       109|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            salaries|      table|              NA|                   NA|  office_db_silver|         temp_salaries|            salaries|truncate_load|        salary_id|         last_updated|salary_id, employ...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|      3024|         silver|        mysql|      table|              NA|              NA|                   NA|       finance_etl|fin_transactions_...|      table|              NA|                   NA|       finance_etl|                    NA|fin_transactions_...|         SCD1|           txn_id|         last_updated|                  NA|                  NA|               pre|                    Y|          N|                     N|                   4|          NA|        mysql|                   4|                    2|                    2|2026-01-22 08:58:...|2026-01-23 12:25:...|           HospitalData|
+|      3025|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|        subject_info|      table|              NA|                   NA|     school_silver|                    NA|        subject_info|         SCD1|       subject_id|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2026-01-22 11:45:...|2026-01-23 08:47:...|           HospitalData|
+|      3019|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|        student_info|      table|              NA|                   NA|     school_silver|                    NA|        student_info|         SCD1|       student_id|         last_updated|                  NA|     student_info.py|                NA|                    Y|          Y|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2025-12-28 06:08:...|2026-01-28 13:01:...|           HospitalData|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+only showing top 20 rows
+
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|config_key|execution_layer|source_system|source_type|source_file_path|source_file_name|source_file_delimiter|source_schema_name|source_table_name|target_type|target_file_path|target_file_delimiter|target_schema_name|temporary_target_table|target_table_name|load_type|primary_key|effective_date_column|md5_columns|    custom_code|execution_sequence|enable_dynamic_schema|active_flag|full_data_refresh_flag|source_connection_id|target_layer|target_system|target_connection_id|source_application_id|target_application_id|          created_at|          updated_at|target_application_name|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|      3019|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|     student_info|      table|              NA|                   NA|     school_silver|                    NA|     student_info|     SCD1| student_id|         last_updated|         NA|student_info.py|                NA|                    Y|          Y|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2025-12-28 06:08:...|2026-01-28 13:01:...|           HospitalData|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+
+2026-02-02 13:05:58,116 - INFO - Reading Config Table Arguments
+2026-02-02 13:05:59,191 - INFO - Looping through Table Arguments
+2026-02-02 13:05:59,191 - INFO - Checking for Null Values in Config Data
+2026-02-02 13:05:59,194 - INFO - SCD1,SourceTable = student_info.TargetTable = student_info
+2026-02-02 13:05:59,194 - INFO - SCD1,SourceTable = student_info.TargetTable = student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Fetching source and target data for SCD1
+2026-02-02 13:05:59,194 - INFO - Fetching source and target data for SCD1
+2026-02-02 13:05:59,194 - INFO - Reading SQL Source Data
+2026-02-02 13:05:59,194 - INFO - Reading SQL Source Data
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+|student_id|first_name|last_name|gender|date_of_birth|               email|     city|country|       last_updated|        insert_date|        update_date|       insert_run_id|       update_run_id|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+|         1|     Aarav|   Sharma|  Male|   2010-05-14|aarav.sharma@exam...|     Pune|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         2|      Diya|    Patel|Female|   2011-09-23|diya.patel@exampl...|Ahmedabad|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         3|     Rohan|    Verma|  Male|   2010-03-17|rohan.verma@examp...|    Delhi|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         4|     Anaya|     Nair|Female|   2012-07-02|anaya.nair@exampl...|    Kochi|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         5|    Vivaan|    Mehta|  Male|   2009-12-11|vivaan.mehta@exam...|   Mumbai|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         6|      Isha|    Reddy|Female|   2011-02-25|isha.reddy@exampl...|Hyderabad|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         7|     Kabir|    Singh|  Male|   2010-08-19|kabir.singh@examp...|   Jaipur|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+
+2026-02-02 13:05:59,822 - INFO - Reading SQL Target Data
+2026-02-02 13:05:59,822 - INFO - Reading SQL Target Data
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
+|student_id|first_name|last_name|gender|date_of_birth|email|city|state|country|last_updated|insert_date|update_date|insert_run_id|update_run_id|
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
+
+2026-02-02 13:06:00,203 - INFO - Adding/updating insert_date and update_date to source_data based on target
+2026-02-02 13:06:00,203 - INFO - Adding/updating insert_date and update_date to source_data based on target
+2026-02-02 13:06:00,257 - INFO - Source has date columns - updating them in original order
+2026-02-02 13:06:00,257 - INFO - Source has date columns - updating them in original order
+2026-02-02 13:06:00,330 - INFO - Result after adding/updating insert_date and update_date:
+2026-02-02 13:06:00,330 - INFO - Result after adding/updating insert_date and update_date:
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+|student_id|first_name|last_name|gender|date_of_birth|               email|     city|country|       last_updated|         insert_date|        update_date|       insert_run_id|       update_run_id|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+|         1|     Aarav|   Sharma|  Male|   2010-05-14|aarav.sharma@exam...|     Pune|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         6|      Isha|    Reddy|Female|   2011-02-25|isha.reddy@exampl...|Hyderabad|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         3|     Rohan|    Verma|  Male|   2010-03-17|rohan.verma@examp...|    Delhi|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         5|    Vivaan|    Mehta|  Male|   2009-12-11|vivaan.mehta@exam...|   Mumbai|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         4|     Anaya|     Nair|Female|   2012-07-02|anaya.nair@exampl...|    Kochi|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         7|     Kabir|    Singh|  Male|   2010-08-19|kabir.singh@examp...|   Jaipur|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         2|      Diya|    Patel|Female|   2011-09-23|diya.patel@exampl...|Ahmedabad|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+
+2026-02-02 13:06:01,074 - INFO - Full data refresh: Truncating target table
+2026-02-02 13:06:01,074 - INFO - Full data refresh: Truncating target table
+2026-02-02 13:06:01,074 - INFO - [SCD1] Starting table truncation - school_silver.student_info
+2026-02-02 13:06:01,074 - INFO - [SCD1] Starting table truncation - school_silver.student_info
+2026-02-02 13:06:01,166 - INFO - [SCD1] Table truncated successfully - school_silver.student_info
+2026-02-02 13:06:01,166 - INFO - [SCD1] Table truncated successfully - school_silver.student_info
+2026-02-02 13:06:01,167 - INFO - Applying custom code transformations
+2026-02-02 13:06:01,167 - INFO - Applying custom code transformations
+file found
+2026-02-02 13:06:01,172 - INFO - SCD1 failed for student_info: SourceData is required
+2026-02-02 13:06:01,172 - INFO - SCD1 failed for student_info: SourceData is required
+2026-02-02 13:06:01,173 - INFO - Writing into Audit Table
+2026-02-02 13:06:01,173 - INFO - Writing into Audit Table
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+|config_key|code_name|              run_id|source_system|  schema_name|target_table_name|source_file_name|          start_time|            end_time|inserted_row_count|updated_row_count|deleted_row_count|no_change_row_count|status|    last_pulled_time|
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+|      3019|     SCD1|manual__2026-02-0...|        mysql|school_silver|     student_info|              NA|2026-02-02 13:05:...|2026-02-02 13:06:...|                 0|                0|                0|                  0|  Fail|2026-02-02 13:06:...|
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+
+Hi Check
+1903
+2026-02-02 13:06:06,341 - INFO - Writing error log to error table
+2026-02-02 13:06:06,341 - INFO - Writing error log to error table
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+|config_key|audit_key|code_name|              run_id|source_system|  schema_name|target_table_name|source_file_name|      execution_time|       error_details|
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+|      3019|     1903|     SCD1|manual__2026-02-0...|        mysql|school_silver|     student_info|              NA|2026-02-02 13:06:...|SCD1 failed for s...|
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+
+2026-02-02 13:06:09,046 - INFO - Loading SCD1 - student_info student_info is not completed
+2026-02-02 13:06:09,047 - INFO - Loading SCD1 - student_info student_info is not completed - SourceData is required
+2026-02-02 13:06:09,047 - INFO - Loading SCD1 - student_info student_info is not completed - SourceData is required
+[2026-02-02T13:06:09.875+0000] {logging_mixin.py:190} INFO - ===== SPARK STDERR =====
+[2026-02-02T13:06:09.875+0000] {logging_mixin.py:190} INFO - Ivy Default Cache set to: /home/airflow/.ivy2/cache
+The jars for the packages stored in: /home/airflow/.ivy2/jars
+com.crealytics#spark-excel_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-d8bd9add-ad09-4503-95d9-ea2db794f855;1.0
+	confs: [default]
+	found com.crealytics#spark-excel_2.12;0.13.5 in central
+	found org.apache.poi#poi;4.1.2 in central
+	found commons-codec#commons-codec;1.13 in central
+	found org.apache.commons#commons-collections4;4.4 in central
+	found org.apache.commons#commons-math3;3.6.1 in central
+	found com.zaxxer#SparseBitSet;1.2 in central
+	found org.apache.poi#poi-ooxml;4.1.2 in central
+	found org.apache.poi#poi-ooxml-schemas;4.1.2 in central
+	found org.apache.xmlbeans#xmlbeans;3.1.0 in central
+	found com.github.virtuald#curvesapi;1.06 in central
+	found com.norbitltd#spoiwo_2.12;1.7.0 in central
+	found org.scala-lang.modules#scala-xml_2.12;1.2.0 in central
+	found com.github.pjfanning#excel-streaming-reader;2.3.4 in central
+	found com.github.pjfanning#poi-shared-strings;1.0.4 in central
+	found com.h2database#h2;1.4.200 in central
+	found org.apache.commons#commons-text;1.8 in central
+	found org.apache.commons#commons-lang3;3.9 in central
+	found xml-apis#xml-apis;1.4.01 in central
+	found org.slf4j#slf4j-api;1.7.30 in central
+	found org.apache.commons#commons-compress;1.20 in central
+	found com.fasterxml.jackson.core#jackson-core;2.8.8 in central
+:: resolution report :: resolve 1269ms :: artifacts dl 28ms
+	:: modules in use:
+	com.crealytics#spark-excel_2.12;0.13.5 from central in [default]
+	com.fasterxml.jackson.core#jackson-core;2.8.8 from central in [default]
+	com.github.pjfanning#excel-streaming-reader;2.3.4 from central in [default]
+	com.github.pjfanning#poi-shared-strings;1.0.4 from central in [default]
+	com.github.virtuald#curvesapi;1.06 from central in [default]
+	com.h2database#h2;1.4.200 from central in [default]
+	com.norbitltd#spoiwo_2.12;1.7.0 from central in [default]
+	com.zaxxer#SparseBitSet;1.2 from central in [default]
+	commons-codec#commons-codec;1.13 from central in [default]
+	org.apache.commons#commons-collections4;4.4 from central in [default]
+	org.apache.commons#commons-compress;1.20 from central in [default]
+	org.apache.commons#commons-lang3;3.9 from central in [default]
+	org.apache.commons#commons-math3;3.6.1 from central in [default]
+	org.apache.commons#commons-text;1.8 from central in [default]
+	org.apache.poi#poi;4.1.2 from central in [default]
+	org.apache.poi#poi-ooxml;4.1.2 from central in [default]
+	org.apache.poi#poi-ooxml-schemas;4.1.2 from central in [default]
+	org.apache.xmlbeans#xmlbeans;3.1.0 from central in [default]
+	org.scala-lang.modules#scala-xml_2.12;1.2.0 from central in [default]
+	org.slf4j#slf4j-api;1.7.30 from central in [default]
+	xml-apis#xml-apis;1.4.01 from central in [default]
+	:: evicted modules:
+	org.apache.commons#commons-compress;1.19 by [org.apache.commons#commons-compress;1.20] in [default]
+	---------------------------------------------------------------------
+	|                  |            modules            ||   artifacts   |
+	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+	---------------------------------------------------------------------
+	|      default     |   22  |   0   |   0   |   1   ||   21  |   0   |
+	---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-d8bd9add-ad09-4503-95d9-ea2db794f855
+	confs: [default]
+	0 artifacts copied, 21 already retrieved (0kB/49ms)
+26/02/02 13:05:31 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/02/02 13:05:38 INFO SparkContext: Running Spark version 3.5.5
+26/02/02 13:05:38 INFO SparkContext: OS info Linux, 6.14.0-1017-azure, amd64
+26/02/02 13:05:38 INFO SparkContext: Java version 17.0.16
+26/02/02 13:05:38 INFO ResourceUtils: ==============================================================
+26/02/02 13:05:38 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/02/02 13:05:38 INFO ResourceUtils: ==============================================================
+26/02/02 13:05:38 INFO SparkContext: Submitted application: audit
+26/02/02 13:05:38 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/02/02 13:05:38 INFO ResourceProfile: Limiting resource is cpu
+26/02/02 13:05:38 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/02/02 13:05:38 INFO SecurityManager: Changing view acls to: default
+26/02/02 13:05:38 INFO SecurityManager: Changing modify acls to: default
+26/02/02 13:05:38 INFO SecurityManager: Changing view acls groups to: 
+26/02/02 13:05:38 INFO SecurityManager: Changing modify acls groups to: 
+26/02/02 13:05:38 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: default; groups with view permissions: EMPTY; users with modify permissions: default; groups with modify permissions: EMPTY
+26/02/02 13:05:39 INFO Utils: Successfully started service 'sparkDriver' on port 33367.
+26/02/02 13:05:39 INFO SparkEnv: Registering MapOutputTracker
+26/02/02 13:05:39 INFO SparkEnv: Registering BlockManagerMaster
+26/02/02 13:05:39 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/02/02 13:05:39 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/02/02 13:05:39 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/02/02 13:05:39 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-d99135d0-0495-4cf5-9544-6e3bd054d38b
+26/02/02 13:05:39 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+26/02/02 13:05:39 INFO SparkEnv: Registering OutputCommitCoordinator
+26/02/02 13:05:39 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/02/02 13:05:39 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/02/02 13:05:40 ERROR SparkContext: Failed to add mysql-connector-j-8.0.33.jar to Spark environment
+java.io.FileNotFoundException: Jar /opt/airflow/mysql-connector-j-8.0.33.jar not found
+	at org.apache.spark.SparkContext.addLocalJarFile$1(SparkContext.scala:2095)
+	at org.apache.spark.SparkContext.addJar(SparkContext.scala:2151)
+	at org.apache.spark.SparkContext.$anonfun$new$15(SparkContext.scala:521)
+	at org.apache.spark.SparkContext.$anonfun$new$15$adapted(SparkContext.scala:521)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.SparkContext.<init>(SparkContext.scala:521)
+	at org.apache.spark.api.java.JavaSparkContext.<init>(JavaSparkContext.scala:58)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:481)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:247)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+	at py4j.Gateway.invoke(Gateway.java:238)
+	at py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:80)
+	at py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:69)
+	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar at file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.crealytics_spark-excel_2.12-0.13.5.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-4.1.2.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-ooxml-4.1.2.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar at file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.norbitltd_spoiwo_2.12-1.7.0.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar at file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.pjfanning_excel-streaming-reader-2.3.4.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar at file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.pjfanning_poi-shared-strings-1.0.4.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-compress-1.20.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar at file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.fasterxml.jackson.core_jackson-core-2.8.8.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar at file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/commons-codec_commons-codec-1.13.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-collections4-4.4.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-math3-3.6.1.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar at file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.zaxxer_SparseBitSet-1.2.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar at file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-ooxml-schemas-4.1.2.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar at file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.virtuald_curvesapi-1.06.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar at file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.xmlbeans_xmlbeans-3.1.0.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar at file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar at file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/xml-apis_xml-apis-1.4.01.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar at file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.slf4j_slf4j-api-1.7.30.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar at file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.h2database_h2-1.4.200.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-text-1.8.jar
+26/02/02 13:05:40 INFO SparkContext: Added file file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar at file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: Copying /home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-lang3-3.9.jar
+26/02/02 13:05:40 INFO Executor: Starting executor ID driver on host eff5ec4100e1
+26/02/02 13:05:40 INFO Executor: OS info Linux, 6.14.0-1017-azure, amd64
+26/02/02 13:05:40 INFO Executor: Java version 17.0.16
+26/02/02 13:05:40 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/02/02 13:05:40 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@11ca564e for default.
+26/02/02 13:05:40 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar with timestamp 1770037538221
+26/02/02 13:05:40 INFO Utils: /home/airflow/.ivy2/jars/commons-codec_commons-codec-1.13.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/commons-codec_commons-codec-1.13.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/xml-apis_xml-apis-1.4.01.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/xml-apis_xml-apis-1.4.01.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.zaxxer_SparseBitSet-1.2.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.zaxxer_SparseBitSet-1.2.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-compress-1.20.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-compress-1.20.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.slf4j_slf4j-api-1.7.30.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.slf4j_slf4j-api-1.7.30.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.xmlbeans_xmlbeans-3.1.0.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.xmlbeans_xmlbeans-3.1.0.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-4.1.2.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-ooxml-4.1.2.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.github.virtuald_curvesapi-1.06.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.virtuald_curvesapi-1.06.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.crealytics_spark-excel_2.12-0.13.5.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.crealytics_spark-excel_2.12-0.13.5.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-collections4-4.4.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-collections4-4.4.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.github.pjfanning_poi-shared-strings-1.0.4.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.pjfanning_poi-shared-strings-1.0.4.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.h2database_h2-1.4.200.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.h2database_h2-1.4.200.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-math3-3.6.1.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-math3-3.6.1.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.github.pjfanning_excel-streaming-reader-2.3.4.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.github.pjfanning_excel-streaming-reader-2.3.4.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.fasterxml.jackson.core_jackson-core-2.8.8.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.fasterxml.jackson.core_jackson-core-2.8.8.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-lang3-3.9.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-lang3-3.9.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-ooxml-schemas-4.1.2.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-ooxml-schemas-4.1.2.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.scala-lang.modules_scala-xml_2.12-1.2.0.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/com.norbitltd_spoiwo_2.12-1.7.0.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/com.norbitltd_spoiwo_2.12-1.7.0.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.poi_poi-4.1.2.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.poi_poi-4.1.2.jar
+26/02/02 13:05:41 INFO Executor: Fetching file:///home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar with timestamp 1770037538221
+26/02/02 13:05:41 INFO Utils: /home/airflow/.ivy2/jars/org.apache.commons_commons-text-1.8.jar has been previously copied to /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/userFiles-371b147a-0d9f-4f71-a015-739c9c47d14c/org.apache.commons_commons-text-1.8.jar
+26/02/02 13:05:41 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 39353.
+26/02/02 13:05:41 INFO NettyBlockTransferService: Server created on eff5ec4100e1:39353
+26/02/02 13:05:41 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/02/02 13:05:41 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, eff5ec4100e1, 39353, None)
+26/02/02 13:05:41 INFO BlockManagerMasterEndpoint: Registering block manager eff5ec4100e1:39353 with 434.4 MiB RAM, BlockManagerId(driver, eff5ec4100e1, 39353, None)
+26/02/02 13:05:41 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, eff5ec4100e1, 39353, None)
+26/02/02 13:05:41 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, eff5ec4100e1, 39353, None)
+26/02/02 13:05:42 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+26/02/02 13:05:42 INFO SharedState: Warehouse path is 'file:/opt/airflow/spark-warehouse'.
+26/02/02 13:05:44 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:44 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:44 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:45 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:05:51 INFO CodeGenerator: Code generated in 621.933645 ms
+26/02/02 13:05:51 INFO DAGScheduler: Registering RDD 3 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 0
+26/02/02 13:05:51 INFO DAGScheduler: Got map stage job 0 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:51 INFO DAGScheduler: Final stage: ShuffleMapStage 0 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:51 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:51 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:51 INFO CodeGenerator: Code generated in 24.261168 ms
+26/02/02 13:05:51 INFO DAGScheduler: Submitting ShuffleMapStage 0 (MapPartitionsRDD[3] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:51 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 28.3 KiB, free 434.4 MiB)
+26/02/02 13:05:51 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 10.8 KiB, free 434.4 MiB)
+26/02/02 13:05:51 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on eff5ec4100e1:39353 (size: 10.8 KiB, free: 434.4 MiB)
+26/02/02 13:05:51 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:51 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 0 (MapPartitionsRDD[3] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:51 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks resource profile 0
+26/02/02 13:05:51 INFO DAGScheduler: Registering RDD 5 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 1
+26/02/02 13:05:51 INFO DAGScheduler: Got map stage job 1 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:51 INFO DAGScheduler: Final stage: ShuffleMapStage 1 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:51 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:51 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:51 INFO DAGScheduler: Submitting ShuffleMapStage 1 (MapPartitionsRDD[5] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:51 INFO MemoryStore: Block broadcast_1 stored as values in memory (estimated size 14.8 KiB, free 434.3 MiB)
+26/02/02 13:05:51 INFO MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 7.7 KiB, free 434.3 MiB)
+26/02/02 13:05:51 INFO BlockManagerInfo: Added broadcast_1_piece0 in memory on eff5ec4100e1:39353 (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:51 INFO SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:51 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 1 (MapPartitionsRDD[5] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:51 INFO TaskSchedulerImpl: Adding task set 1.0 with 1 tasks resource profile 0
+26/02/02 13:05:51 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:51 INFO TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:52 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+26/02/02 13:05:52 INFO Executor: Running task 0.0 in stage 1.0 (TID 1)
+26/02/02 13:05:52 INFO CodeGenerator: Code generated in 46.818526 ms
+26/02/02 13:05:52 INFO CodeGenerator: Code generated in 76.761385 ms
+26/02/02 13:05:52 INFO CodeGenerator: Code generated in 54.810743 ms
+26/02/02 13:05:52 INFO CodeGenerator: Code generated in 71.712799 ms
+26/02/02 13:05:52 INFO JDBCRDD: closed connection
+26/02/02 13:05:53 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 2032 bytes result sent to driver
+26/02/02 13:05:53 INFO TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 1136 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:53 INFO TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+26/02/02 13:05:53 INFO DAGScheduler: ShuffleMapStage 1 (showString at NativeMethodAccessorImpl.java:0) finished in 1.294 s
+26/02/02 13:05:53 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:53 INFO DAGScheduler: running: Set(ShuffleMapStage 0)
+26/02/02 13:05:53 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:53 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:53 INFO JDBCRDD: closed connection
+26/02/02 13:05:53 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1989 bytes result sent to driver
+26/02/02 13:05:53 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 1427 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:53 INFO DAGScheduler: ShuffleMapStage 0 (showString at NativeMethodAccessorImpl.java:0) finished in 1.922 s
+26/02/02 13:05:53 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+26/02/02 13:05:53 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:53 INFO DAGScheduler: running: Set()
+26/02/02 13:05:53 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:53 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:53 INFO ShufflePartitionsUtil: For shuffle(1), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:53 INFO SparkContext: Starting job: $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264
+26/02/02 13:05:53 INFO DAGScheduler: Got job 2 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) with 1 output partitions
+26/02/02 13:05:53 INFO DAGScheduler: Final stage: ResultStage 3 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264)
+26/02/02 13:05:53 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 2)
+26/02/02 13:05:53 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:53 INFO DAGScheduler: Submitting ResultStage 3 (MapPartitionsRDD[7] at $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264), which has no missing parents
+26/02/02 13:05:53 INFO MemoryStore: Block broadcast_2 stored as values in memory (estimated size 8.2 KiB, free 434.3 MiB)
+26/02/02 13:05:53 INFO MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 4.2 KiB, free 434.3 MiB)
+26/02/02 13:05:53 INFO BlockManagerInfo: Added broadcast_2_piece0 in memory on eff5ec4100e1:39353 (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:53 INFO SparkContext: Created broadcast 2 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:53 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 3 (MapPartitionsRDD[7] at $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:53 INFO TaskSchedulerImpl: Adding task set 3.0 with 1 tasks resource profile 0
+26/02/02 13:05:53 INFO TaskSetManager: Starting task 0.0 in stage 3.0 (TID 2) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:53 INFO Executor: Running task 0.0 in stage 3.0 (TID 2)
+26/02/02 13:05:53 INFO BlockManagerInfo: Removed broadcast_1_piece0 on eff5ec4100e1:39353 in memory (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:53 INFO BlockManagerInfo: Removed broadcast_0_piece0 on eff5ec4100e1:39353 in memory (size: 10.8 KiB, free: 434.4 MiB)
+26/02/02 13:05:53 INFO ShuffleBlockFetcherIterator: Getting 1 (312.0 B) non-empty blocks including 1 (312.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:53 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 22 ms
+26/02/02 13:05:53 INFO Executor: Finished task 0.0 in stage 3.0 (TID 2). 3932 bytes result sent to driver
+26/02/02 13:05:53 INFO TaskSetManager: Finished task 0.0 in stage 3.0 (TID 2) in 246 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:53 INFO DAGScheduler: ResultStage 3 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) finished in 0.315 s
+26/02/02 13:05:53 INFO TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+26/02/02 13:05:53 INFO DAGScheduler: Job 2 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:53 INFO TaskSchedulerImpl: Killing all running tasks in stage 3: Stage finished
+26/02/02 13:05:53 INFO DAGScheduler: Job 2 finished: $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264, took 0.342711 s
+26/02/02 13:05:53 INFO CodeGenerator: Code generated in 57.381967 ms
+26/02/02 13:05:53 INFO MemoryStore: Block broadcast_3 stored as values in memory (estimated size 1024.1 KiB, free 433.4 MiB)
+26/02/02 13:05:53 INFO MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 316.0 B, free 433.4 MiB)
+26/02/02 13:05:53 INFO BlockManagerInfo: Added broadcast_3_piece0 in memory on eff5ec4100e1:39353 (size: 316.0 B, free: 434.4 MiB)
+26/02/02 13:05:53 INFO SparkContext: Created broadcast 3 from $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264
+26/02/02 13:05:54 INFO ShufflePartitionsUtil: For shuffle(0), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:54 INFO CodeGenerator: Code generated in 115.392255 ms
+26/02/02 13:05:54 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:05:54 INFO DAGScheduler: Got job 3 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:54 INFO DAGScheduler: Final stage: ResultStage 5 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:54 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 4)
+26/02/02 13:05:54 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:54 INFO DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[10] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:54 INFO MemoryStore: Block broadcast_4 stored as values in memory (estimated size 26.4 KiB, free 433.4 MiB)
+26/02/02 13:05:54 INFO MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 9.1 KiB, free 433.4 MiB)
+26/02/02 13:05:54 INFO BlockManagerInfo: Added broadcast_4_piece0 in memory on eff5ec4100e1:39353 (size: 9.1 KiB, free: 434.4 MiB)
+26/02/02 13:05:54 INFO SparkContext: Created broadcast 4 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:54 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[10] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:54 INFO TaskSchedulerImpl: Adding task set 5.0 with 1 tasks resource profile 0
+26/02/02 13:05:54 INFO BlockManagerInfo: Removed broadcast_2_piece0 on eff5ec4100e1:39353 in memory (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:54 INFO TaskSetManager: Starting task 0.0 in stage 5.0 (TID 3) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:54 INFO Executor: Running task 0.0 in stage 5.0 (TID 3)
+26/02/02 13:05:54 INFO ShuffleBlockFetcherIterator: Getting 1 (3.5 KiB) non-empty blocks including 1 (3.5 KiB) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:54 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 2 ms
+26/02/02 13:05:54 INFO CodeGenerator: Code generated in 94.499127 ms
+26/02/02 13:05:54 INFO Executor: Finished task 0.0 in stage 5.0 (TID 3). 7090 bytes result sent to driver
+26/02/02 13:05:54 INFO TaskSetManager: Finished task 0.0 in stage 5.0 (TID 3) in 202 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:54 INFO TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+26/02/02 13:05:54 INFO DAGScheduler: ResultStage 5 (showString at NativeMethodAccessorImpl.java:0) finished in 0.243 s
+26/02/02 13:05:54 INFO DAGScheduler: Job 3 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:54 INFO TaskSchedulerImpl: Killing all running tasks in stage 5: Stage finished
+26/02/02 13:05:54 INFO DAGScheduler: Job 3 finished: showString at NativeMethodAccessorImpl.java:0, took 0.258395 s
+26/02/02 13:05:55 INFO BlockManagerInfo: Removed broadcast_4_piece0 on eff5ec4100e1:39353 in memory (size: 9.1 KiB, free: 434.4 MiB)
+26/02/02 13:05:56 INFO CodeGenerator: Code generated in 94.009489 ms
+26/02/02 13:05:57 INFO CodeGenerator: Code generated in 65.959599 ms
+26/02/02 13:05:57 INFO DAGScheduler: Registering RDD 14 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 2
+26/02/02 13:05:57 INFO DAGScheduler: Got map stage job 4 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:57 INFO DAGScheduler: Final stage: ShuffleMapStage 6 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:57 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:57 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:57 INFO DAGScheduler: Submitting ShuffleMapStage 6 (MapPartitionsRDD[14] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_5 stored as values in memory (estimated size 28.5 KiB, free 433.4 MiB)
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 10.9 KiB, free 433.4 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Added broadcast_5_piece0 in memory on eff5ec4100e1:39353 (size: 10.9 KiB, free: 434.4 MiB)
+26/02/02 13:05:57 INFO SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:57 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 6 (MapPartitionsRDD[14] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Adding task set 6.0 with 1 tasks resource profile 0
+26/02/02 13:05:57 INFO TaskSetManager: Starting task 0.0 in stage 6.0 (TID 4) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:57 INFO Executor: Running task 0.0 in stage 6.0 (TID 4)
+26/02/02 13:05:57 INFO DAGScheduler: Registering RDD 16 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 3
+26/02/02 13:05:57 INFO DAGScheduler: Got map stage job 5 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:57 INFO DAGScheduler: Final stage: ShuffleMapStage 7 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:57 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:57 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:57 INFO DAGScheduler: Submitting ShuffleMapStage 7 (MapPartitionsRDD[16] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_6 stored as values in memory (estimated size 14.8 KiB, free 433.3 MiB)
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_6_piece0 stored as bytes in memory (estimated size 7.7 KiB, free 433.3 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Added broadcast_6_piece0 in memory on eff5ec4100e1:39353 (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:57 INFO SparkContext: Created broadcast 6 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:57 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 7 (MapPartitionsRDD[16] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Adding task set 7.0 with 1 tasks resource profile 0
+26/02/02 13:05:57 INFO TaskSetManager: Starting task 0.0 in stage 7.0 (TID 5) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:57 INFO Executor: Running task 0.0 in stage 7.0 (TID 5)
+26/02/02 13:05:57 INFO JDBCRDD: closed connection
+26/02/02 13:05:57 INFO Executor: Finished task 0.0 in stage 7.0 (TID 5). 1946 bytes result sent to driver
+26/02/02 13:05:57 INFO TaskSetManager: Finished task 0.0 in stage 7.0 (TID 5) in 192 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Removed TaskSet 7.0, whose tasks have all completed, from pool 
+26/02/02 13:05:57 INFO DAGScheduler: ShuffleMapStage 7 (showString at NativeMethodAccessorImpl.java:0) finished in 0.224 s
+26/02/02 13:05:57 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:57 INFO DAGScheduler: running: Set(ShuffleMapStage 6)
+26/02/02 13:05:57 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:57 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:57 INFO CodeGenerator: Code generated in 129.835299 ms
+26/02/02 13:05:57 INFO ShufflePartitionsUtil: For shuffle(3), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:57 INFO JDBCRDD: closed connection
+26/02/02 13:05:57 INFO Executor: Finished task 0.0 in stage 6.0 (TID 4). 1946 bytes result sent to driver
+26/02/02 13:05:57 INFO TaskSetManager: Finished task 0.0 in stage 6.0 (TID 4) in 349 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:57 INFO DAGScheduler: ShuffleMapStage 6 (showString at NativeMethodAccessorImpl.java:0) finished in 0.397 s
+26/02/02 13:05:57 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:57 INFO DAGScheduler: running: Set()
+26/02/02 13:05:57 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:57 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Removed TaskSet 6.0, whose tasks have all completed, from pool 
+26/02/02 13:05:57 INFO SparkContext: Starting job: $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264
+26/02/02 13:05:57 INFO DAGScheduler: Got job 6 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) with 1 output partitions
+26/02/02 13:05:57 INFO DAGScheduler: Final stage: ResultStage 9 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264)
+26/02/02 13:05:57 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 8)
+26/02/02 13:05:57 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:57 INFO DAGScheduler: Submitting ResultStage 9 (MapPartitionsRDD[18] at $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264), which has no missing parents
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_7 stored as values in memory (estimated size 8.2 KiB, free 433.3 MiB)
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_7_piece0 stored as bytes in memory (estimated size 4.2 KiB, free 433.3 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Added broadcast_7_piece0 in memory on eff5ec4100e1:39353 (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:57 INFO SparkContext: Created broadcast 7 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:57 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 9 (MapPartitionsRDD[18] at $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Adding task set 9.0 with 1 tasks resource profile 0
+26/02/02 13:05:57 INFO TaskSetManager: Starting task 0.0 in stage 9.0 (TID 6) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:57 INFO Executor: Running task 0.0 in stage 9.0 (TID 6)
+26/02/02 13:05:57 INFO ShuffleBlockFetcherIterator: Getting 1 (312.0 B) non-empty blocks including 1 (312.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:57 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 3 ms
+26/02/02 13:05:57 INFO Executor: Finished task 0.0 in stage 9.0 (TID 6). 3846 bytes result sent to driver
+26/02/02 13:05:57 INFO TaskSetManager: Finished task 0.0 in stage 9.0 (TID 6) in 53 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Removed TaskSet 9.0, whose tasks have all completed, from pool 
+26/02/02 13:05:57 INFO DAGScheduler: ResultStage 9 ($anonfun$withThreadLocalCaptured$1 at FutureTask.java:264) finished in 0.067 s
+26/02/02 13:05:57 INFO DAGScheduler: Job 6 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:57 INFO TaskSchedulerImpl: Killing all running tasks in stage 9: Stage finished
+26/02/02 13:05:57 INFO DAGScheduler: Job 6 finished: $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264, took 0.081940 s
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_8 stored as values in memory (estimated size 1024.1 KiB, free 432.3 MiB)
+26/02/02 13:05:57 INFO MemoryStore: Block broadcast_8_piece0 stored as bytes in memory (estimated size 316.0 B, free 432.3 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Added broadcast_8_piece0 in memory on eff5ec4100e1:39353 (size: 316.0 B, free: 434.4 MiB)
+26/02/02 13:05:57 INFO SparkContext: Created broadcast 8 from $anonfun$withThreadLocalCaptured$1 at FutureTask.java:264
+26/02/02 13:05:57 INFO ShufflePartitionsUtil: For shuffle(2), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:57 INFO BlockManagerInfo: Removed broadcast_7_piece0 on eff5ec4100e1:39353 in memory (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Removed broadcast_6_piece0 on eff5ec4100e1:39353 in memory (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:57 INFO BlockManagerInfo: Removed broadcast_5_piece0 on eff5ec4100e1:39353 in memory (size: 10.9 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:05:58 INFO DAGScheduler: Got job 7 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:58 INFO DAGScheduler: Final stage: ResultStage 11 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:58 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 10)
+26/02/02 13:05:58 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:58 INFO DAGScheduler: Submitting ResultStage 11 (MapPartitionsRDD[21] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_9 stored as values in memory (estimated size 26.5 KiB, free 432.4 MiB)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_9_piece0 stored as bytes in memory (estimated size 9.2 KiB, free 432.4 MiB)
+26/02/02 13:05:58 INFO BlockManagerInfo: Added broadcast_9_piece0 in memory on eff5ec4100e1:39353 (size: 9.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Created broadcast 9 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 11 (MapPartitionsRDD[21] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Adding task set 11.0 with 1 tasks resource profile 0
+26/02/02 13:05:58 INFO TaskSetManager: Starting task 0.0 in stage 11.0 (TID 7) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:58 INFO Executor: Running task 0.0 in stage 11.0 (TID 7)
+26/02/02 13:05:58 INFO ShuffleBlockFetcherIterator: Getting 1 (405.0 B) non-empty blocks including 1 (405.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:58 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 1 ms
+26/02/02 13:05:58 INFO Executor: Finished task 0.0 in stage 11.0 (TID 7). 4444 bytes result sent to driver
+26/02/02 13:05:58 INFO TaskSetManager: Finished task 0.0 in stage 11.0 (TID 7) in 43 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Removed TaskSet 11.0, whose tasks have all completed, from pool 
+26/02/02 13:05:58 INFO DAGScheduler: ResultStage 11 (showString at NativeMethodAccessorImpl.java:0) finished in 0.070 s
+26/02/02 13:05:58 INFO DAGScheduler: Job 7 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Killing all running tasks in stage 11: Stage finished
+26/02/02 13:05:58 INFO DAGScheduler: Job 7 finished: showString at NativeMethodAccessorImpl.java:0, took 0.077381 s
+26/02/02 13:05:58 INFO CodeGenerator: Code generated in 83.432253 ms
+26/02/02 13:05:58 INFO DAGScheduler: Registering RDD 25 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) as input to shuffle 4
+26/02/02 13:05:58 INFO DAGScheduler: Got map stage job 8 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) with 1 output partitions
+26/02/02 13:05:58 INFO DAGScheduler: Final stage: ShuffleMapStage 12 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30)
+26/02/02 13:05:58 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:58 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:58 INFO DAGScheduler: Submitting ShuffleMapStage 12 (MapPartitionsRDD[25] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30), which has no missing parents
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_10 stored as values in memory (estimated size 28.1 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_10_piece0 stored as bytes in memory (estimated size 10.8 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO BlockManagerInfo: Added broadcast_10_piece0 in memory on eff5ec4100e1:39353 (size: 10.8 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Created broadcast 10 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:58 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 12 (MapPartitionsRDD[25] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Adding task set 12.0 with 1 tasks resource profile 0
+26/02/02 13:05:58 INFO BlockManagerInfo: Removed broadcast_9_piece0 on eff5ec4100e1:39353 in memory (size: 9.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO DAGScheduler: Registering RDD 27 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) as input to shuffle 5
+26/02/02 13:05:58 INFO DAGScheduler: Got map stage job 9 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) with 1 output partitions
+26/02/02 13:05:58 INFO DAGScheduler: Final stage: ShuffleMapStage 13 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30)
+26/02/02 13:05:58 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:58 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:58 INFO TaskSetManager: Starting task 0.0 in stage 12.0 (TID 8) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:58 INFO DAGScheduler: Submitting ShuffleMapStage 13 (MapPartitionsRDD[27] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30), which has no missing parents
+26/02/02 13:05:58 INFO Executor: Running task 0.0 in stage 12.0 (TID 8)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_11 stored as values in memory (estimated size 14.8 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_11_piece0 stored as bytes in memory (estimated size 7.7 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO BlockManagerInfo: Added broadcast_11_piece0 in memory on eff5ec4100e1:39353 (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Created broadcast 11 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:58 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 13 (MapPartitionsRDD[27] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Adding task set 13.0 with 1 tasks resource profile 0
+26/02/02 13:05:58 INFO TaskSetManager: Starting task 0.0 in stage 13.0 (TID 9) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:05:58 INFO Executor: Running task 0.0 in stage 13.0 (TID 9)
+26/02/02 13:05:58 INFO JDBCRDD: closed connection
+26/02/02 13:05:58 INFO Executor: Finished task 0.0 in stage 13.0 (TID 9). 1946 bytes result sent to driver
+26/02/02 13:05:58 INFO TaskSetManager: Finished task 0.0 in stage 13.0 (TID 9) in 232 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:58 INFO DAGScheduler: ShuffleMapStage 13 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) finished in 0.290 s
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Removed TaskSet 13.0, whose tasks have all completed, from pool 
+26/02/02 13:05:58 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:58 INFO DAGScheduler: running: Set(ShuffleMapStage 12)
+26/02/02 13:05:58 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:58 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:58 INFO CodeGenerator: Code generated in 126.913484 ms
+26/02/02 13:05:58 INFO ShufflePartitionsUtil: For shuffle(5), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:58 INFO JDBCRDD: closed connection
+26/02/02 13:05:58 INFO Executor: Finished task 0.0 in stage 12.0 (TID 8). 1989 bytes result sent to driver
+26/02/02 13:05:58 INFO TaskSetManager: Finished task 0.0 in stage 12.0 (TID 8) in 379 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Removed TaskSet 12.0, whose tasks have all completed, from pool 
+26/02/02 13:05:58 INFO SparkContext: Starting job: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30
+26/02/02 13:05:58 INFO DAGScheduler: ShuffleMapStage 12 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) finished in 0.424 s
+26/02/02 13:05:58 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:05:58 INFO DAGScheduler: running: Set()
+26/02/02 13:05:58 INFO DAGScheduler: waiting: Set()
+26/02/02 13:05:58 INFO DAGScheduler: failed: Set()
+26/02/02 13:05:58 INFO DAGScheduler: Got job 10 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) with 1 output partitions
+26/02/02 13:05:58 INFO DAGScheduler: Final stage: ResultStage 15 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30)
+26/02/02 13:05:58 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 14)
+26/02/02 13:05:58 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:58 INFO DAGScheduler: Submitting ResultStage 15 (MapPartitionsRDD[29] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30), which has no missing parents
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_12 stored as values in memory (estimated size 8.2 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_12_piece0 stored as bytes in memory (estimated size 4.2 KiB, free 432.3 MiB)
+26/02/02 13:05:58 INFO BlockManagerInfo: Added broadcast_12_piece0 in memory on eff5ec4100e1:39353 (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Created broadcast 12 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:58 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 15 (MapPartitionsRDD[29] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Adding task set 15.0 with 1 tasks resource profile 0
+26/02/02 13:05:58 INFO TaskSetManager: Starting task 0.0 in stage 15.0 (TID 10) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:58 INFO Executor: Running task 0.0 in stage 15.0 (TID 10)
+26/02/02 13:05:58 INFO ShuffleBlockFetcherIterator: Getting 1 (312.0 B) non-empty blocks including 1 (312.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:58 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+26/02/02 13:05:58 INFO Executor: Finished task 0.0 in stage 15.0 (TID 10). 3846 bytes result sent to driver
+26/02/02 13:05:58 INFO TaskSetManager: Finished task 0.0 in stage 15.0 (TID 10) in 18 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Removed TaskSet 15.0, whose tasks have all completed, from pool 
+26/02/02 13:05:58 INFO DAGScheduler: ResultStage 15 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) finished in 0.029 s
+26/02/02 13:05:58 INFO DAGScheduler: Job 10 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:58 INFO TaskSchedulerImpl: Killing all running tasks in stage 15: Stage finished
+26/02/02 13:05:58 INFO DAGScheduler: Job 10 finished: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30, took 0.044683 s
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_13 stored as values in memory (estimated size 1024.1 KiB, free 431.3 MiB)
+26/02/02 13:05:58 INFO MemoryStore: Block broadcast_13_piece0 stored as bytes in memory (estimated size 316.0 B, free 431.3 MiB)
+26/02/02 13:05:58 INFO BlockManagerInfo: Added broadcast_13_piece0 in memory on eff5ec4100e1:39353 (size: 316.0 B, free: 434.4 MiB)
+26/02/02 13:05:58 INFO SparkContext: Created broadcast 13 from collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30
+26/02/02 13:05:58 INFO ShufflePartitionsUtil: For shuffle(4), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:05:59 INFO CodeGenerator: Code generated in 45.898665 ms
+26/02/02 13:05:59 INFO SparkContext: Starting job: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30
+26/02/02 13:05:59 INFO DAGScheduler: Got job 11 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) with 1 output partitions
+26/02/02 13:05:59 INFO DAGScheduler: Final stage: ResultStage 17 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30)
+26/02/02 13:05:59 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 16)
+26/02/02 13:05:59 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:59 INFO DAGScheduler: Submitting ResultStage 17 (MapPartitionsRDD[32] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30), which has no missing parents
+26/02/02 13:05:59 INFO MemoryStore: Block broadcast_14 stored as values in memory (estimated size 22.9 KiB, free 431.3 MiB)
+26/02/02 13:05:59 INFO MemoryStore: Block broadcast_14_piece0 stored as bytes in memory (estimated size 8.0 KiB, free 431.3 MiB)
+26/02/02 13:05:59 INFO BlockManagerInfo: Added broadcast_14_piece0 in memory on eff5ec4100e1:39353 (size: 8.0 KiB, free: 434.4 MiB)
+26/02/02 13:05:59 INFO SparkContext: Created broadcast 14 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 17 (MapPartitionsRDD[32] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Adding task set 17.0 with 1 tasks resource profile 0
+26/02/02 13:05:59 INFO TaskSetManager: Starting task 0.0 in stage 17.0 (TID 11) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10977 bytes) 
+26/02/02 13:05:59 INFO Executor: Running task 0.0 in stage 17.0 (TID 11)
+26/02/02 13:05:59 INFO ShuffleBlockFetcherIterator: Getting 1 (8.4 KiB) non-empty blocks including 1 (8.4 KiB) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:05:59 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 3 ms
+26/02/02 13:05:59 INFO CodeGenerator: Code generated in 34.429967 ms
+26/02/02 13:05:59 INFO Executor: Finished task 0.0 in stage 17.0 (TID 11). 11850 bytes result sent to driver
+26/02/02 13:05:59 INFO TaskSetManager: Finished task 0.0 in stage 17.0 (TID 11) in 58 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Removed TaskSet 17.0, whose tasks have all completed, from pool 
+26/02/02 13:05:59 INFO DAGScheduler: ResultStage 17 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30) finished in 0.071 s
+26/02/02 13:05:59 INFO DAGScheduler: Job 11 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Killing all running tasks in stage 17: Stage finished
+26/02/02 13:05:59 INFO DAGScheduler: Job 11 finished: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Data_Integration/args_silver.py:30, took 0.077845 s
+26/02/02 13:05:59 INFO CodeGenerator: Code generated in 23.766879 ms
+26/02/02 13:05:59 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:05:59 INFO DAGScheduler: Got job 12 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:05:59 INFO DAGScheduler: Final stage: ResultStage 18 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:05:59 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:05:59 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:05:59 INFO DAGScheduler: Submitting ResultStage 18 (MapPartitionsRDD[35] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:05:59 INFO MemoryStore: Block broadcast_15 stored as values in memory (estimated size 17.7 KiB, free 431.3 MiB)
+26/02/02 13:05:59 INFO MemoryStore: Block broadcast_15_piece0 stored as bytes in memory (estimated size 7.7 KiB, free 431.3 MiB)
+26/02/02 13:05:59 INFO BlockManagerInfo: Added broadcast_15_piece0 in memory on eff5ec4100e1:39353 (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:05:59 INFO SparkContext: Created broadcast 15 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:05:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 18 (MapPartitionsRDD[35] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Adding task set 18.0 with 1 tasks resource profile 0
+26/02/02 13:05:59 INFO TaskSetManager: Starting task 0.0 in stage 18.0 (TID 12) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10804 bytes) 
+26/02/02 13:05:59 INFO Executor: Running task 0.0 in stage 18.0 (TID 12)
+26/02/02 13:05:59 INFO CodeGenerator: Code generated in 22.365147 ms
+26/02/02 13:05:59 INFO JDBCRDD: closed connection
+26/02/02 13:05:59 INFO Executor: Finished task 0.0 in stage 18.0 (TID 12). 2159 bytes result sent to driver
+26/02/02 13:05:59 INFO TaskSetManager: Finished task 0.0 in stage 18.0 (TID 12) in 111 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Removed TaskSet 18.0, whose tasks have all completed, from pool 
+26/02/02 13:05:59 INFO DAGScheduler: ResultStage 18 (showString at NativeMethodAccessorImpl.java:0) finished in 0.130 s
+26/02/02 13:05:59 INFO DAGScheduler: Job 12 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:05:59 INFO TaskSchedulerImpl: Killing all running tasks in stage 18: Stage finished
+26/02/02 13:05:59 INFO DAGScheduler: Job 12 finished: showString at NativeMethodAccessorImpl.java:0, took 0.135127 s
+26/02/02 13:05:59 INFO CodeGenerator: Code generated in 30.672256 ms
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 30.866067 ms
+26/02/02 13:06:00 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:00 INFO DAGScheduler: Got job 13 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:00 INFO DAGScheduler: Final stage: ResultStage 19 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:00 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:00 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:00 INFO DAGScheduler: Submitting ResultStage 19 (MapPartitionsRDD[38] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_16 stored as values in memory (estimated size 18.1 KiB, free 431.3 MiB)
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_16_piece0 stored as bytes in memory (estimated size 7.8 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO BlockManagerInfo: Added broadcast_16_piece0 in memory on eff5ec4100e1:39353 (size: 7.8 KiB, free: 434.4 MiB)
+26/02/02 13:06:00 INFO SparkContext: Created broadcast 16 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:00 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 19 (MapPartitionsRDD[38] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Adding task set 19.0 with 1 tasks resource profile 0
+26/02/02 13:06:00 INFO TaskSetManager: Starting task 0.0 in stage 19.0 (TID 13) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10804 bytes) 
+26/02/02 13:06:00 INFO Executor: Running task 0.0 in stage 19.0 (TID 13)
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 21.253232 ms
+26/02/02 13:06:00 INFO JDBCRDD: closed connection
+26/02/02 13:06:00 INFO Executor: Finished task 0.0 in stage 19.0 (TID 13). 1409 bytes result sent to driver
+26/02/02 13:06:00 INFO TaskSetManager: Finished task 0.0 in stage 19.0 (TID 13) in 89 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Removed TaskSet 19.0, whose tasks have all completed, from pool 
+26/02/02 13:06:00 INFO DAGScheduler: ResultStage 19 (showString at NativeMethodAccessorImpl.java:0) finished in 0.097 s
+26/02/02 13:06:00 INFO DAGScheduler: Job 13 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Killing all running tasks in stage 19: Stage finished
+26/02/02 13:06:00 INFO DAGScheduler: Job 13 finished: showString at NativeMethodAccessorImpl.java:0, took 0.111733 s
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 28.217162 ms
+26/02/02 13:06:00 INFO DAGScheduler: Registering RDD 42 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 6
+26/02/02 13:06:00 INFO DAGScheduler: Got map stage job 14 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:00 INFO DAGScheduler: Final stage: ShuffleMapStage 20 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:00 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:00 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:00 INFO DAGScheduler: Submitting ShuffleMapStage 20 (MapPartitionsRDD[42] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_17 stored as values in memory (estimated size 17.9 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_17_piece0 stored as bytes in memory (estimated size 8.4 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO BlockManagerInfo: Added broadcast_17_piece0 in memory on eff5ec4100e1:39353 (size: 8.4 KiB, free: 434.3 MiB)
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 23.791663 ms
+26/02/02 13:06:00 INFO SparkContext: Created broadcast 17 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:00 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 20 (MapPartitionsRDD[42] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Adding task set 20.0 with 1 tasks resource profile 0
+26/02/02 13:06:00 INFO DAGScheduler: Registering RDD 44 (showString at NativeMethodAccessorImpl.java:0) as input to shuffle 7
+26/02/02 13:06:00 INFO TaskSetManager: Starting task 0.0 in stage 20.0 (TID 14) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:06:00 INFO DAGScheduler: Got map stage job 15 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:00 INFO DAGScheduler: Final stage: ShuffleMapStage 21 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:00 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:00 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:00 INFO DAGScheduler: Submitting ShuffleMapStage 21 (MapPartitionsRDD[44] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:00 INFO Executor: Running task 0.0 in stage 20.0 (TID 14)
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_18 stored as values in memory (estimated size 14.5 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_18_piece0 stored as bytes in memory (estimated size 7.6 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO BlockManagerInfo: Added broadcast_18_piece0 in memory on eff5ec4100e1:39353 (size: 7.6 KiB, free: 434.3 MiB)
+26/02/02 13:06:00 INFO SparkContext: Created broadcast 18 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:00 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 21 (MapPartitionsRDD[44] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Adding task set 21.0 with 1 tasks resource profile 0
+26/02/02 13:06:00 INFO TaskSetManager: Starting task 0.0 in stage 21.0 (TID 15) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:06:00 INFO Executor: Running task 0.0 in stage 21.0 (TID 15)
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 60.496513 ms
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 46.902305 ms
+26/02/02 13:06:00 INFO JDBCRDD: closed connection
+26/02/02 13:06:00 INFO JDBCRDD: closed connection
+26/02/02 13:06:00 INFO Executor: Finished task 0.0 in stage 21.0 (TID 15). 1817 bytes result sent to driver
+26/02/02 13:06:00 INFO TaskSetManager: Finished task 0.0 in stage 21.0 (TID 15) in 150 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:00 INFO DAGScheduler: ShuffleMapStage 21 (showString at NativeMethodAccessorImpl.java:0) finished in 0.175 s
+26/02/02 13:06:00 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:06:00 INFO DAGScheduler: running: Set(ShuffleMapStage 20)
+26/02/02 13:06:00 INFO DAGScheduler: waiting: Set()
+26/02/02 13:06:00 INFO DAGScheduler: failed: Set()
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Removed TaskSet 21.0, whose tasks have all completed, from pool 
+26/02/02 13:06:00 INFO Executor: Finished task 0.0 in stage 20.0 (TID 14). 1946 bytes result sent to driver
+26/02/02 13:06:00 INFO TaskSetManager: Finished task 0.0 in stage 20.0 (TID 14) in 190 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Removed TaskSet 20.0, whose tasks have all completed, from pool 
+26/02/02 13:06:00 INFO DAGScheduler: ShuffleMapStage 20 (showString at NativeMethodAccessorImpl.java:0) finished in 0.212 s
+26/02/02 13:06:00 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:06:00 INFO DAGScheduler: running: Set()
+26/02/02 13:06:00 INFO DAGScheduler: waiting: Set()
+26/02/02 13:06:00 INFO DAGScheduler: failed: Set()
+26/02/02 13:06:00 INFO ShufflePartitionsUtil: For shuffle(6), advisory target size: 67108864, actual target size 1048576, minimum partition size: 1048576
+26/02/02 13:06:00 INFO CodeGenerator: Code generated in 55.222377 ms
+26/02/02 13:06:00 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:00 INFO DAGScheduler: Got job 16 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:00 INFO DAGScheduler: Final stage: ResultStage 23 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:00 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 22)
+26/02/02 13:06:00 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:00 INFO DAGScheduler: Submitting ResultStage 23 (MapPartitionsRDD[47] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_19 stored as values in memory (estimated size 18.0 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO MemoryStore: Block broadcast_19_piece0 stored as bytes in memory (estimated size 7.3 KiB, free 431.2 MiB)
+26/02/02 13:06:00 INFO BlockManagerInfo: Added broadcast_19_piece0 in memory on eff5ec4100e1:39353 (size: 7.3 KiB, free: 434.3 MiB)
+26/02/02 13:06:00 INFO SparkContext: Created broadcast 19 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:00 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 23 (MapPartitionsRDD[47] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:00 INFO TaskSchedulerImpl: Adding task set 23.0 with 1 tasks resource profile 0
+26/02/02 13:06:00 INFO TaskSetManager: Starting task 0.0 in stage 23.0 (TID 16) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10958 bytes) 
+26/02/02 13:06:00 INFO Executor: Running task 0.0 in stage 23.0 (TID 16)
+26/02/02 13:06:00 INFO ShuffleBlockFetcherIterator: Getting 1 (1757.0 B) non-empty blocks including 1 (1757.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:06:00 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+26/02/02 13:06:01 INFO CodeGenerator: Code generated in 30.69728 ms
+26/02/02 13:06:01 INFO Executor: Finished task 0.0 in stage 23.0 (TID 16). 4523 bytes result sent to driver
+26/02/02 13:06:01 INFO TaskSetManager: Finished task 0.0 in stage 23.0 (TID 16) in 53 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:01 INFO TaskSchedulerImpl: Removed TaskSet 23.0, whose tasks have all completed, from pool 
+26/02/02 13:06:01 INFO DAGScheduler: ResultStage 23 (showString at NativeMethodAccessorImpl.java:0) finished in 0.071 s
+26/02/02 13:06:01 INFO DAGScheduler: Job 16 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:01 INFO TaskSchedulerImpl: Killing all running tasks in stage 23: Stage finished
+26/02/02 13:06:01 INFO DAGScheduler: Job 16 finished: showString at NativeMethodAccessorImpl.java:0, took 0.094528 s
+26/02/02 13:06:01 WARN SparkSession: Using an existing Spark session; only runtime SQL configurations will take effect.
+26/02/02 13:06:01 INFO CodeGenerator: Code generated in 19.613179 ms
+26/02/02 13:06:01 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:01 INFO DAGScheduler: Got job 17 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:01 INFO DAGScheduler: Final stage: ResultStage 24 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:01 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:01 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:01 INFO DAGScheduler: Submitting ResultStage 24 (MapPartitionsRDD[54] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:01 INFO MemoryStore: Block broadcast_20 stored as values in memory (estimated size 19.6 KiB, free 431.2 MiB)
+26/02/02 13:06:01 INFO MemoryStore: Block broadcast_20_piece0 stored as bytes in memory (estimated size 8.9 KiB, free 431.2 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_15_piece0 on eff5ec4100e1:39353 in memory (size: 7.7 KiB, free: 434.3 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Added broadcast_20_piece0 in memory on eff5ec4100e1:39353 (size: 8.9 KiB, free: 434.3 MiB)
+26/02/02 13:06:01 INFO SparkContext: Created broadcast 20 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:01 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 24 (MapPartitionsRDD[54] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:01 INFO TaskSchedulerImpl: Adding task set 24.0 with 1 tasks resource profile 0
+26/02/02 13:06:01 INFO TaskSetManager: Starting task 0.0 in stage 24.0 (TID 17) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10938 bytes) 
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_14_piece0 on eff5ec4100e1:39353 in memory (size: 8.0 KiB, free: 434.3 MiB)
+26/02/02 13:06:01 INFO Executor: Running task 0.0 in stage 24.0 (TID 17)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_17_piece0 on eff5ec4100e1:39353 in memory (size: 8.4 KiB, free: 434.3 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_16_piece0 on eff5ec4100e1:39353 in memory (size: 7.8 KiB, free: 434.4 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_12_piece0 on eff5ec4100e1:39353 in memory (size: 4.2 KiB, free: 434.4 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_19_piece0 on eff5ec4100e1:39353 in memory (size: 7.3 KiB, free: 434.4 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_10_piece0 on eff5ec4100e1:39353 in memory (size: 10.8 KiB, free: 434.4 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_18_piece0 on eff5ec4100e1:39353 in memory (size: 7.6 KiB, free: 434.4 MiB)
+26/02/02 13:06:01 INFO BlockManagerInfo: Removed broadcast_11_piece0 on eff5ec4100e1:39353 in memory (size: 7.7 KiB, free: 434.4 MiB)
+26/02/02 13:06:03 INFO CodeGenerator: Code generated in 37.092087 ms
+26/02/02 13:06:03 INFO PythonRunner: Times: total = 2150, boot = 1708, init = 442, finish = 0
+26/02/02 13:06:03 INFO Executor: Finished task 0.0 in stage 24.0 (TID 17). 1843 bytes result sent to driver
+26/02/02 13:06:03 INFO TaskSetManager: Finished task 0.0 in stage 24.0 (TID 17) in 2254 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:03 INFO TaskSchedulerImpl: Removed TaskSet 24.0, whose tasks have all completed, from pool 
+26/02/02 13:06:03 INFO PythonAccumulatorV2: Connected to AccumulatorServer at host: 127.0.0.1 port: 51467
+26/02/02 13:06:03 INFO DAGScheduler: ResultStage 24 (showString at NativeMethodAccessorImpl.java:0) finished in 2.314 s
+26/02/02 13:06:03 INFO DAGScheduler: Job 17 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:03 INFO TaskSchedulerImpl: Killing all running tasks in stage 24: Stage finished
+26/02/02 13:06:03 INFO DAGScheduler: Job 17 finished: showString at NativeMethodAccessorImpl.java:0, took 2.328142 s
+26/02/02 13:06:03 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:03 INFO DAGScheduler: Got job 18 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:03 INFO DAGScheduler: Final stage: ResultStage 25 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:03 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:03 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:03 INFO DAGScheduler: Submitting ResultStage 25 (MapPartitionsRDD[54] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:03 INFO MemoryStore: Block broadcast_21 stored as values in memory (estimated size 19.6 KiB, free 431.4 MiB)
+26/02/02 13:06:03 INFO MemoryStore: Block broadcast_21_piece0 stored as bytes in memory (estimated size 8.9 KiB, free 431.3 MiB)
+26/02/02 13:06:03 INFO BlockManagerInfo: Added broadcast_21_piece0 in memory on eff5ec4100e1:39353 (size: 8.9 KiB, free: 434.4 MiB)
+26/02/02 13:06:03 INFO SparkContext: Created broadcast 21 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:03 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 25 (MapPartitionsRDD[54] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(1))
+26/02/02 13:06:03 INFO TaskSchedulerImpl: Adding task set 25.0 with 1 tasks resource profile 0
+26/02/02 13:06:03 INFO TaskSetManager: Starting task 0.0 in stage 25.0 (TID 18) (eff5ec4100e1, executor driver, partition 1, PROCESS_LOCAL, 11105 bytes) 
+26/02/02 13:06:03 INFO Executor: Running task 0.0 in stage 25.0 (TID 18)
+26/02/02 13:06:04 INFO PythonRunner: Times: total = 259, boot = -25, init = 284, finish = 0
+26/02/02 13:06:04 INFO Executor: Finished task 0.0 in stage 25.0 (TID 18). 2117 bytes result sent to driver
+26/02/02 13:06:04 INFO TaskSetManager: Finished task 0.0 in stage 25.0 (TID 18) in 287 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:04 INFO TaskSchedulerImpl: Removed TaskSet 25.0, whose tasks have all completed, from pool 
+26/02/02 13:06:04 INFO DAGScheduler: ResultStage 25 (showString at NativeMethodAccessorImpl.java:0) finished in 0.295 s
+26/02/02 13:06:04 INFO DAGScheduler: Job 18 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:04 INFO TaskSchedulerImpl: Killing all running tasks in stage 25: Stage finished
+26/02/02 13:06:04 INFO DAGScheduler: Job 18 finished: showString at NativeMethodAccessorImpl.java:0, took 0.307749 s
+26/02/02 13:06:04 INFO CodeGenerator: Code generated in 21.512302 ms
+26/02/02 13:06:04 INFO CodeGenerator: Code generated in 16.163201 ms
+26/02/02 13:06:04 INFO SparkContext: Starting job: save at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:04 INFO DAGScheduler: Got job 19 (save at NativeMethodAccessorImpl.java:0) with 2 output partitions
+26/02/02 13:06:04 INFO DAGScheduler: Final stage: ResultStage 26 (save at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:04 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:04 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:04 INFO DAGScheduler: Submitting ResultStage 26 (MapPartitionsRDD[58] at save at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:04 INFO MemoryStore: Block broadcast_22 stored as values in memory (estimated size 42.8 KiB, free 431.3 MiB)
+26/02/02 13:06:04 INFO MemoryStore: Block broadcast_22_piece0 stored as bytes in memory (estimated size 18.4 KiB, free 431.3 MiB)
+26/02/02 13:06:04 INFO BlockManagerInfo: Added broadcast_22_piece0 in memory on eff5ec4100e1:39353 (size: 18.4 KiB, free: 434.4 MiB)
+26/02/02 13:06:04 INFO SparkContext: Created broadcast 22 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:04 INFO DAGScheduler: Submitting 2 missing tasks from ResultStage 26 (MapPartitionsRDD[58] at save at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0, 1))
+26/02/02 13:06:04 INFO TaskSchedulerImpl: Adding task set 26.0 with 2 tasks resource profile 0
+26/02/02 13:06:04 INFO TaskSetManager: Starting task 0.0 in stage 26.0 (TID 19) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10938 bytes) 
+26/02/02 13:06:04 INFO TaskSetManager: Starting task 1.0 in stage 26.0 (TID 20) (eff5ec4100e1, executor driver, partition 1, PROCESS_LOCAL, 11105 bytes) 
+26/02/02 13:06:04 INFO Executor: Running task 1.0 in stage 26.0 (TID 20)
+26/02/02 13:06:04 INFO Executor: Running task 0.0 in stage 26.0 (TID 19)
+26/02/02 13:06:04 INFO CodeGenerator: Code generated in 49.855804 ms
+26/02/02 13:06:04 INFO CodeGenerator: Code generated in 84.618905 ms
+26/02/02 13:06:05 INFO PythonRunner: Times: total = 754, boot = -409, init = 1163, finish = 0
+26/02/02 13:06:05 INFO Executor: Finished task 0.0 in stage 26.0 (TID 19). 1621 bytes result sent to driver
+26/02/02 13:06:05 INFO TaskSetManager: Finished task 0.0 in stage 26.0 (TID 19) in 822 ms on eff5ec4100e1 (executor driver) (1/2)
+26/02/02 13:06:05 INFO PythonRunner: Times: total = 1038, boot = 18, init = 1020, finish = 0
+26/02/02 13:06:05 INFO Executor: Finished task 1.0 in stage 26.0 (TID 20). 1664 bytes result sent to driver
+26/02/02 13:06:05 INFO TaskSetManager: Finished task 1.0 in stage 26.0 (TID 20) in 1249 ms on eff5ec4100e1 (executor driver) (2/2)
+26/02/02 13:06:05 INFO TaskSchedulerImpl: Removed TaskSet 26.0, whose tasks have all completed, from pool 
+26/02/02 13:06:05 INFO DAGScheduler: ResultStage 26 (save at NativeMethodAccessorImpl.java:0) finished in 1.299 s
+26/02/02 13:06:05 INFO DAGScheduler: Job 19 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:05 INFO TaskSchedulerImpl: Killing all running tasks in stage 26: Stage finished
+26/02/02 13:06:05 INFO DAGScheduler: Job 19 finished: save at NativeMethodAccessorImpl.java:0, took 1.306547 s
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 12.102907 ms
+26/02/02 13:06:06 INFO DAGScheduler: Registering RDD 61 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) as input to shuffle 8
+26/02/02 13:06:06 INFO DAGScheduler: Got map stage job 20 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) with 1 output partitions
+26/02/02 13:06:06 INFO DAGScheduler: Final stage: ShuffleMapStage 27 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29)
+26/02/02 13:06:06 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:06 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:06 INFO DAGScheduler: Submitting ShuffleMapStage 27 (MapPartitionsRDD[61] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29), which has no missing parents
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_23 stored as values in memory (estimated size 15.2 KiB, free 431.3 MiB)
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_23_piece0 stored as bytes in memory (estimated size 7.8 KiB, free 431.3 MiB)
+26/02/02 13:06:06 INFO BlockManagerInfo: Added broadcast_23_piece0 in memory on eff5ec4100e1:39353 (size: 7.8 KiB, free: 434.4 MiB)
+26/02/02 13:06:06 INFO SparkContext: Created broadcast 23 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:06 INFO DAGScheduler: Submitting 1 missing tasks from ShuffleMapStage 27 (MapPartitionsRDD[61] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Adding task set 27.0 with 1 tasks resource profile 0
+26/02/02 13:06:06 INFO TaskSetManager: Starting task 0.0 in stage 27.0 (TID 21) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10793 bytes) 
+26/02/02 13:06:06 INFO Executor: Running task 0.0 in stage 27.0 (TID 21)
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 27.395143 ms
+26/02/02 13:06:06 INFO JDBCRDD: closed connection
+26/02/02 13:06:06 INFO Executor: Finished task 0.0 in stage 27.0 (TID 21). 1885 bytes result sent to driver
+26/02/02 13:06:06 INFO TaskSetManager: Finished task 0.0 in stage 27.0 (TID 21) in 110 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Removed TaskSet 27.0, whose tasks have all completed, from pool 
+26/02/02 13:06:06 INFO DAGScheduler: ShuffleMapStage 27 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) finished in 0.125 s
+26/02/02 13:06:06 INFO DAGScheduler: looking for newly runnable stages
+26/02/02 13:06:06 INFO DAGScheduler: running: Set()
+26/02/02 13:06:06 INFO DAGScheduler: waiting: Set()
+26/02/02 13:06:06 INFO DAGScheduler: failed: Set()
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 29.776998 ms
+26/02/02 13:06:06 INFO SparkContext: Starting job: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29
+26/02/02 13:06:06 INFO DAGScheduler: Got job 21 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) with 1 output partitions
+26/02/02 13:06:06 INFO DAGScheduler: Final stage: ResultStage 29 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29)
+26/02/02 13:06:06 INFO DAGScheduler: Parents of final stage: List(ShuffleMapStage 28)
+26/02/02 13:06:06 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:06 INFO DAGScheduler: Submitting ResultStage 29 (MapPartitionsRDD[64] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29), which has no missing parents
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_24 stored as values in memory (estimated size 13.1 KiB, free 431.2 MiB)
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_24_piece0 stored as bytes in memory (estimated size 6.1 KiB, free 431.2 MiB)
+26/02/02 13:06:06 INFO BlockManagerInfo: Added broadcast_24_piece0 in memory on eff5ec4100e1:39353 (size: 6.1 KiB, free: 434.4 MiB)
+26/02/02 13:06:06 INFO SparkContext: Created broadcast 24 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:06 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 29 (MapPartitionsRDD[64] at collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Adding task set 29.0 with 1 tasks resource profile 0
+26/02/02 13:06:06 INFO TaskSetManager: Starting task 0.0 in stage 29.0 (TID 22) (eff5ec4100e1, executor driver, partition 0, NODE_LOCAL, 10958 bytes) 
+26/02/02 13:06:06 INFO Executor: Running task 0.0 in stage 29.0 (TID 22)
+26/02/02 13:06:06 INFO ShuffleBlockFetcherIterator: Getting 1 (60.0 B) non-empty blocks including 1 (60.0 B) local and 0 (0.0 B) host-local and 0 (0.0 B) push-merged-local and 0 (0.0 B) remote blocks
+26/02/02 13:06:06 INFO ShuffleBlockFetcherIterator: Started 0 remote fetches in 0 ms
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 27.114746 ms
+26/02/02 13:06:06 INFO Executor: Finished task 0.0 in stage 29.0 (TID 22). 3995 bytes result sent to driver
+26/02/02 13:06:06 INFO TaskSetManager: Finished task 0.0 in stage 29.0 (TID 22) in 43 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Removed TaskSet 29.0, whose tasks have all completed, from pool 
+26/02/02 13:06:06 INFO DAGScheduler: ResultStage 29 (collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29) finished in 0.054 s
+26/02/02 13:06:06 INFO DAGScheduler: Job 21 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Killing all running tasks in stage 29: Stage finished
+26/02/02 13:06:06 INFO DAGScheduler: Job 21 finished: collect at /opt/airflow/RedPluto-Data-Engineering-Tool/Audit/latest_audit.py:29, took 0.058014 s
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 12.776289 ms
+26/02/02 13:06:06 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:06 INFO DAGScheduler: Got job 22 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:06 INFO DAGScheduler: Final stage: ResultStage 30 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:06 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:06 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:06 INFO DAGScheduler: Submitting ResultStage 30 (MapPartitionsRDD[71] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_25 stored as values in memory (estimated size 17.3 KiB, free 431.2 MiB)
+26/02/02 13:06:06 INFO MemoryStore: Block broadcast_25_piece0 stored as bytes in memory (estimated size 8.4 KiB, free 431.2 MiB)
+26/02/02 13:06:06 INFO BlockManagerInfo: Added broadcast_25_piece0 in memory on eff5ec4100e1:39353 (size: 8.4 KiB, free: 434.3 MiB)
+26/02/02 13:06:06 INFO SparkContext: Created broadcast 25 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:06 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 30 (MapPartitionsRDD[71] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+26/02/02 13:06:06 INFO TaskSchedulerImpl: Adding task set 30.0 with 1 tasks resource profile 0
+26/02/02 13:06:06 INFO TaskSetManager: Starting task 0.0 in stage 30.0 (TID 23) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10938 bytes) 
+26/02/02 13:06:06 INFO Executor: Running task 0.0 in stage 30.0 (TID 23)
+26/02/02 13:06:06 INFO CodeGenerator: Code generated in 28.503799 ms
+26/02/02 13:06:07 INFO PythonRunner: Times: total = 513, boot = -1240, init = 1753, finish = 0
+26/02/02 13:06:07 INFO Executor: Finished task 0.0 in stage 30.0 (TID 23). 1886 bytes result sent to driver
+26/02/02 13:06:07 INFO TaskSetManager: Finished task 0.0 in stage 30.0 (TID 23) in 544 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Removed TaskSet 30.0, whose tasks have all completed, from pool 
+26/02/02 13:06:07 INFO DAGScheduler: ResultStage 30 (showString at NativeMethodAccessorImpl.java:0) finished in 0.556 s
+26/02/02 13:06:07 INFO DAGScheduler: Job 22 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Killing all running tasks in stage 30: Stage finished
+26/02/02 13:06:07 INFO DAGScheduler: Job 22 finished: showString at NativeMethodAccessorImpl.java:0, took 0.562805 s
+26/02/02 13:06:07 INFO SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:07 INFO DAGScheduler: Got job 23 (showString at NativeMethodAccessorImpl.java:0) with 1 output partitions
+26/02/02 13:06:07 INFO DAGScheduler: Final stage: ResultStage 31 (showString at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:07 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:07 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:07 INFO DAGScheduler: Submitting ResultStage 31 (MapPartitionsRDD[71] at showString at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:07 INFO MemoryStore: Block broadcast_26 stored as values in memory (estimated size 17.3 KiB, free 431.2 MiB)
+26/02/02 13:06:07 INFO MemoryStore: Block broadcast_26_piece0 stored as bytes in memory (estimated size 8.4 KiB, free 431.2 MiB)
+26/02/02 13:06:07 INFO BlockManagerInfo: Added broadcast_26_piece0 in memory on eff5ec4100e1:39353 (size: 8.4 KiB, free: 434.3 MiB)
+26/02/02 13:06:07 INFO SparkContext: Created broadcast 26 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:07 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 31 (MapPartitionsRDD[71] at showString at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(1))
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Adding task set 31.0 with 1 tasks resource profile 0
+26/02/02 13:06:07 INFO TaskSetManager: Starting task 0.0 in stage 31.0 (TID 24) (eff5ec4100e1, executor driver, partition 1, PROCESS_LOCAL, 11130 bytes) 
+26/02/02 13:06:07 INFO Executor: Running task 0.0 in stage 31.0 (TID 24)
+26/02/02 13:06:07 INFO PythonRunner: Times: total = 373, boot = -1421, init = 1794, finish = 0
+26/02/02 13:06:07 INFO Executor: Finished task 0.0 in stage 31.0 (TID 24). 2103 bytes result sent to driver
+26/02/02 13:06:07 INFO TaskSetManager: Finished task 0.0 in stage 31.0 (TID 24) in 394 ms on eff5ec4100e1 (executor driver) (1/1)
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Removed TaskSet 31.0, whose tasks have all completed, from pool 
+26/02/02 13:06:07 INFO DAGScheduler: ResultStage 31 (showString at NativeMethodAccessorImpl.java:0) finished in 0.411 s
+26/02/02 13:06:07 INFO DAGScheduler: Job 23 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Killing all running tasks in stage 31: Stage finished
+26/02/02 13:06:07 INFO DAGScheduler: Job 23 finished: showString at NativeMethodAccessorImpl.java:0, took 0.420693 s
+26/02/02 13:06:07 INFO CodeGenerator: Code generated in 15.695661 ms
+26/02/02 13:06:07 INFO CodeGenerator: Code generated in 28.122269 ms
+26/02/02 13:06:07 INFO SparkContext: Starting job: save at NativeMethodAccessorImpl.java:0
+26/02/02 13:06:07 INFO DAGScheduler: Got job 24 (save at NativeMethodAccessorImpl.java:0) with 2 output partitions
+26/02/02 13:06:07 INFO DAGScheduler: Final stage: ResultStage 32 (save at NativeMethodAccessorImpl.java:0)
+26/02/02 13:06:07 INFO DAGScheduler: Parents of final stage: List()
+26/02/02 13:06:07 INFO DAGScheduler: Missing parents: List()
+26/02/02 13:06:07 INFO DAGScheduler: Submitting ResultStage 32 (MapPartitionsRDD[75] at save at NativeMethodAccessorImpl.java:0), which has no missing parents
+26/02/02 13:06:07 INFO MemoryStore: Block broadcast_27 stored as values in memory (estimated size 40.0 KiB, free 431.2 MiB)
+26/02/02 13:06:07 INFO MemoryStore: Block broadcast_27_piece0 stored as bytes in memory (estimated size 17.7 KiB, free 431.1 MiB)
+26/02/02 13:06:07 INFO BlockManagerInfo: Added broadcast_27_piece0 in memory on eff5ec4100e1:39353 (size: 17.7 KiB, free: 434.3 MiB)
+26/02/02 13:06:07 INFO SparkContext: Created broadcast 27 from broadcast at DAGScheduler.scala:1585
+26/02/02 13:06:07 INFO DAGScheduler: Submitting 2 missing tasks from ResultStage 32 (MapPartitionsRDD[75] at save at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0, 1))
+26/02/02 13:06:07 INFO TaskSchedulerImpl: Adding task set 32.0 with 2 tasks resource profile 0
+26/02/02 13:06:07 INFO TaskSetManager: Starting task 0.0 in stage 32.0 (TID 25) (eff5ec4100e1, executor driver, partition 0, PROCESS_LOCAL, 10938 bytes) 
+26/02/02 13:06:07 INFO TaskSetManager: Starting task 1.0 in stage 32.0 (TID 26) (eff5ec4100e1, executor driver, partition 1, PROCESS_LOCAL, 11130 bytes) 
+26/02/02 13:06:07 INFO Executor: Running task 1.0 in stage 32.0 (TID 26)
+26/02/02 13:06:07 INFO Executor: Running task 0.0 in stage 32.0 (TID 25)
+26/02/02 13:06:07 INFO CodeGenerator: Code generated in 31.733217 ms
+26/02/02 13:06:07 INFO CodeGenerator: Code generated in 74.811031 ms
+26/02/02 13:06:08 INFO PythonRunner: Times: total = 911, boot = -767, init = 1678, finish = 0
+26/02/02 13:06:08 INFO Executor: Finished task 0.0 in stage 32.0 (TID 25). 1621 bytes result sent to driver
+26/02/02 13:06:08 INFO TaskSetManager: Finished task 0.0 in stage 32.0 (TID 25) in 943 ms on eff5ec4100e1 (executor driver) (1/2)
+26/02/02 13:06:08 INFO PythonRunner: Times: total = 987, boot = -352, init = 1334, finish = 5
+26/02/02 13:06:08 INFO Executor: Finished task 1.0 in stage 32.0 (TID 26). 1664 bytes result sent to driver
+26/02/02 13:06:08 INFO TaskSetManager: Finished task 1.0 in stage 32.0 (TID 26) in 1139 ms on eff5ec4100e1 (executor driver) (2/2)
+26/02/02 13:06:08 INFO DAGScheduler: ResultStage 32 (save at NativeMethodAccessorImpl.java:0) finished in 1.152 s
+26/02/02 13:06:08 INFO DAGScheduler: Job 24 is finished. Cancelling potential speculative or zombie tasks for this job
+26/02/02 13:06:08 INFO TaskSchedulerImpl: Removed TaskSet 32.0, whose tasks have all completed, from pool 
+26/02/02 13:06:08 INFO TaskSchedulerImpl: Killing all running tasks in stage 32: Stage finished
+26/02/02 13:06:08 INFO DAGScheduler: Job 24 finished: save at NativeMethodAccessorImpl.java:0, took 1.157051 s
+26/02/02 13:06:09 INFO SparkContext: Invoking stop() from shutdown hook
+26/02/02 13:06:09 INFO SparkContext: SparkContext is stopping with exitCode 0.
+26/02/02 13:06:09 INFO SparkUI: Stopped Spark web UI at http://eff5ec4100e1:4040
+26/02/02 13:06:09 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+26/02/02 13:06:09 INFO MemoryStore: MemoryStore cleared
+26/02/02 13:06:09 INFO BlockManager: BlockManager stopped
+26/02/02 13:06:09 INFO BlockManagerMaster: BlockManagerMaster stopped
+26/02/02 13:06:09 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+26/02/02 13:06:09 INFO SparkContext: Successfully stopped SparkContext
+26/02/02 13:06:09 INFO ShutdownHookManager: Shutdown hook called
+26/02/02 13:06:09 INFO ShutdownHookManager: Deleting directory /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa/pyspark-0bcfef16-5fff-4a61-8b44-6025ae0baa2d
+26/02/02 13:06:09 INFO ShutdownHookManager: Deleting directory /tmp/spark-77743ae4-c415-4f8c-ad04-aba1f0ba12aa
+26/02/02 13:06:09 INFO ShutdownHookManager: Deleting directory /tmp/spark-2487d6b1-5b57-4697-9b55-ba01eb3cad8a
+[2026-02-02T13:06:09.877+0000] {python.py:240} INFO - Done. Returned value was: :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Raw sys.argv: ['/opt/airflow/RedPluto-Data-Engineering-Tool/main_silver.py', 'manual__2026-02-02T13:05:25.828744+00:00', '{"user": "rpdet_az", "password": "***", "config_db": "config_db", "config_table": "config_table", "application_config": "application_config", "audit_table": "audit_table", "error_table": "error_table", "config_recon": "reconciliation_config", "data_dictionary_table": "data_dictionary_table", "recon_result": "recon_result", "DQ_config": "data_quality_config_table", "DQ_output": "data_quality_output_table", "url": "jdbc:postgresql://74.225.252.224:5432", "driver": "org.postgresql.Driver", "mysql_url": "jdbc:mysql://74.225.252.224:3306", "mysql_driver": "com.mysql.cj.jdbc.Driver", "reference_table": "reference_table", "log_path": "/opt/airflow/spark_logs", "dq_log_path": "/opt/airflow/data_quality_logs", "string_default": "NA", "int_default": 0, "date_default": "01/01/2099"}']
+app_prop: {'user': 'rpdet_az', 'password': '***', 'config_db': 'config_db', 'config_table': 'config_table', 'application_config': 'application_config', 'audit_table': 'audit_table', 'error_table': 'error_table', 'config_recon': 'reconciliation_config', 'data_dictionary_table': 'data_dictionary_table', 'recon_result': 'recon_result', 'DQ_config': 'data_quality_config_table', 'DQ_output': 'data_quality_output_table', 'url': 'jdbc:postgresql://74.225.252.224:5432', 'driver': 'org.postgresql.Driver', 'mysql_url': 'jdbc:mysql://74.225.252.224:3306', 'mysql_driver': 'com.mysql.cj.jdbc.Driver', 'reference_table': 'reference_table', 'log_path': '/opt/airflow/spark_logs', 'dq_log_path': '/opt/airflow/data_quality_logs', 'string_default': 'NA', 'int_default': 0, 'date_default': '01/01/2099'}
+2026-02-02 13:05:45,571 - INFO - Fetching config table
+2026-02-02 13:05:48,097 - INFO - Fetching application config table
+2026-02-02 13:05:48,275 - INFO - Enriching config data with target application name
+2026-02-02 13:05:48,573 - INFO - Fetching Silver Tables
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|config_key|execution_layer|source_system|source_type|source_file_path|source_file_name|source_file_delimiter|source_schema_name|   source_table_name|target_type|target_file_path|target_file_delimiter|target_schema_name|temporary_target_table|   target_table_name|    load_type|      primary_key|effective_date_column|         md5_columns|         custom_code|execution_sequence|enable_dynamic_schema|active_flag|full_data_refresh_flag|source_connection_id|target_layer|target_system|target_connection_id|source_application_id|target_application_id|          created_at|          updated_at|target_application_name|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|        11|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|             address|      table|              NA|                   NA|  insurance_silver|                    NA|             address|         SCD1|        AddressID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        12|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|               claim|      table|              NA|                   NA|  insurance_silver|                    NA|               claim|         SCD1|          ClaimID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        13|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|            coverage|      table|              NA|                   NA|  insurance_silver|                    NA|            coverage|         SCD1|       CoverageID|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        14|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|             payment|      table|              NA|                   NA|  insurance_silver|          temp_payment|             payment|         SCD2|        PaymentID|         last_updated|PaymentID,Custome...|                  NA|                NA|                    Y|          N|                     Y|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        15|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|              policy|      table|              NA|                   NA|  insurance_silver|           temp_policy|              policy|         SCD2|         PolicyID|         last_updated|PolicyID,Customer...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        16|         silver|        mysql|      table|              NA|              NA|                    N|  insurance_bronze|            customer|      table|              NA|                   NA|  insurance_silver|         temp_customer|            customer|         SCD1|       CustomerID|         last_updated|CustomerID,FirstN...|Data_Transformati...|              post|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|        36|         silver|        mysql|      table|              NA|              NA|                    N|    banking_bronze|           customers|      table|              NA|                   NA|    banking_silver|        temp_customers|           customers|         SCD1|      customer_id|         last_updated|customer_id,first...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       100|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|              assets|      table|              NA|                   NA|  office_db_silver|           temp_assets|              assets|truncate_load|         asset_id|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       101|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|     client_projects|      table|              NA|                   NA|  office_db_silver|  temp_client_projects|     client_projects|truncate_load|client_project_id|         last_updated|client project_id...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       102|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|             clients|      table|              NA|                   NA|  office_db_silver|          temp_clients|             clients|truncate_load|        client_id|         last_updated|client_id, client...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       103|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|         departments|      table|              NA|                   NA|  office_db_silver|      temp_departments|         departments|truncate_load|    department_id|         last_updated|department_id, de...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       104|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|           employees|      table|              NA|                   NA|  office_db_silver|        temp_employees|           employees|truncate_load|      employee_id|         last_updated|employee_id, firs...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       105|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|   meeting_attendees|      table|              NA|                   NA|  office_db_silver|  temp_meeting_atte...|   meeting_attendees|truncate_load|    attendance_id|         last_updated|attendance_id, me...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       106|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            meetings|      table|              NA|                   NA|  office_db_silver|         temp_meetings|            meetings|truncate_load|       meeting_id|         last_updated|meeting_id, title...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       107|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze| project_assignments|      table|              NA|                   NA|  office_db_silver|  temp_project_assi...| project_assignments|truncate_load|    assignment_id|         last_updated|assignment_id, pr...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       108|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            projects|      table|              NA|                   NA|  office_db_silver|         temp_projects|            projects|truncate_load|       project_id|         last_updated|project_id,projec...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|       109|         silver|        mysql|      table|              NA|              NA|                   NA|  office_db_bronze|            salaries|      table|              NA|                   NA|  office_db_silver|         temp_salaries|            salaries|truncate_load|        salary_id|         last_updated|salary_id, employ...|                  NA|                NA|                    Y|          N|                     N|                NULL|        NULL|         NULL|                NULL|                 NULL|                 NULL|2025-11-14 13:15:...|2025-11-14 13:15:...|                   NULL|
+|      3024|         silver|        mysql|      table|              NA|              NA|                   NA|       finance_etl|fin_transactions_...|      table|              NA|                   NA|       finance_etl|                    NA|fin_transactions_...|         SCD1|           txn_id|         last_updated|                  NA|                  NA|               pre|                    Y|          N|                     N|                   4|          NA|        mysql|                   4|                    2|                    2|2026-01-22 08:58:...|2026-01-23 12:25:...|           HospitalData|
+|      3025|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|        subject_info|      table|              NA|                   NA|     school_silver|                    NA|        subject_info|         SCD1|       subject_id|         last_updated|                  NA|                  NA|                NA|                    Y|          N|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2026-01-22 11:45:...|2026-01-23 08:47:...|           HospitalData|
+|      3019|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|        student_info|      table|              NA|                   NA|     school_silver|                    NA|        student_info|         SCD1|       student_id|         last_updated|                  NA|     student_info.py|                NA|                    Y|          Y|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2025-12-28 06:08:...|2026-01-28 13:01:...|           HospitalData|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+--------------------+-----------+----------------+---------------------+------------------+----------------------+--------------------+-------------+-----------------+---------------------+--------------------+--------------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+only showing top 20 rows
+
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|config_key|execution_layer|source_system|source_type|source_file_path|source_file_name|source_file_delimiter|source_schema_name|source_table_name|target_type|target_file_path|target_file_delimiter|target_schema_name|temporary_target_table|target_table_name|load_type|primary_key|effective_date_column|md5_columns|    custom_code|execution_sequence|enable_dynamic_schema|active_flag|full_data_refresh_flag|source_connection_id|target_layer|target_system|target_connection_id|source_application_id|target_application_id|          created_at|          updated_at|target_application_name|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+|      3019|         silver|        mysql|      table|              NA|              NA|                   NA|     school_bronze|     student_info|      table|              NA|                   NA|     school_silver|                    NA|     student_info|     SCD1| student_id|         last_updated|         NA|student_info.py|                NA|                    Y|          Y|                     Y|                   4|          NA|        mysql|                   4|                    2|                    2|2025-12-28 06:08:...|2026-01-28 13:01:...|           HospitalData|
++----------+---------------+-------------+-----------+----------------+----------------+---------------------+------------------+-----------------+-----------+----------------+---------------------+------------------+----------------------+-----------------+---------+-----------+---------------------+-----------+---------------+------------------+---------------------+-----------+----------------------+--------------------+------------+-------------+--------------------+---------------------+---------------------+--------------------+--------------------+-----------------------+
+
+2026-02-02 13:05:58,116 - INFO - Reading Config Table Arguments
+2026-02-02 13:05:59,191 - INFO - Looping through Table Arguments
+2026-02-02 13:05:59,191 - INFO - Checking for Null Values in Config Data
+2026-02-02 13:05:59,194 - INFO - SCD1,SourceTable = student_info.TargetTable = student_info
+2026-02-02 13:05:59,194 - INFO - SCD1,SourceTable = student_info.TargetTable = student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Calling Silver SCD1 Function SourceTable - student_info,TargetTable -student_info
+2026-02-02 13:05:59,194 - INFO - Fetching source and target data for SCD1
+2026-02-02 13:05:59,194 - INFO - Fetching source and target data for SCD1
+2026-02-02 13:05:59,194 - INFO - Reading SQL Source Data
+2026-02-02 13:05:59,194 - INFO - Reading SQL Source Data
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+|student_id|first_name|last_name|gender|date_of_birth|               email|     city|country|       last_updated|        insert_date|        update_date|       insert_run_id|       update_run_id|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+|         1|     Aarav|   Sharma|  Male|   2010-05-14|aarav.sharma@exam...|     Pune|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         2|      Diya|    Patel|Female|   2011-09-23|diya.patel@exampl...|Ahmedabad|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         3|     Rohan|    Verma|  Male|   2010-03-17|rohan.verma@examp...|    Delhi|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         4|     Anaya|     Nair|Female|   2012-07-02|anaya.nair@exampl...|    Kochi|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         5|    Vivaan|    Mehta|  Male|   2009-12-11|vivaan.mehta@exam...|   Mumbai|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         6|      Isha|    Reddy|Female|   2011-02-25|isha.reddy@exampl...|Hyderabad|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         7|     Kabir|    Singh|  Male|   2010-08-19|kabir.singh@examp...|   Jaipur|  India|2025-11-13 09:43:37|2025-11-20 10:24:59|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+-------------------+-------------------+--------------------+--------------------+
+
+2026-02-02 13:05:59,822 - INFO - Reading SQL Target Data
+2026-02-02 13:05:59,822 - INFO - Reading SQL Target Data
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
+|student_id|first_name|last_name|gender|date_of_birth|email|city|state|country|last_updated|insert_date|update_date|insert_run_id|update_run_id|
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
++----------+----------+---------+------+-------------+-----+----+-----+-------+------------+-----------+-----------+-------------+-------------+
+
+2026-02-02 13:06:00,203 - INFO - Adding/updating insert_date and update_date to source_data based on target
+2026-02-02 13:06:00,203 - INFO - Adding/updating insert_date and update_date to source_data based on target
+2026-02-02 13:06:00,257 - INFO - Source has date columns - updating them in original order
+2026-02-02 13:06:00,257 - INFO - Source has date columns - updating them in original order
+2026-02-02 13:06:00,330 - INFO - Result after adding/updating insert_date and update_date:
+2026-02-02 13:06:00,330 - INFO - Result after adding/updating insert_date and update_date:
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+|student_id|first_name|last_name|gender|date_of_birth|               email|     city|country|       last_updated|         insert_date|        update_date|       insert_run_id|       update_run_id|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+|         1|     Aarav|   Sharma|  Male|   2010-05-14|aarav.sharma@exam...|     Pune|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         6|      Isha|    Reddy|Female|   2011-02-25|isha.reddy@exampl...|Hyderabad|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         3|     Rohan|    Verma|  Male|   2010-03-17|rohan.verma@examp...|    Delhi|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         5|    Vivaan|    Mehta|  Male|   2009-12-11|vivaan.mehta@exam...|   Mumbai|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         4|     Anaya|     Nair|Female|   2012-07-02|anaya.nair@exampl...|    Kochi|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         7|     Kabir|    Singh|  Male|   2010-08-19|kabir.singh@examp...|   Jaipur|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
+|         2|      Diya|    Patel|Female|   2011-09-23|diya.patel@exampl...|Ahmedabad|  India|2025-11-13 09:43:37|2026-02-02 13:06:...|2025-11-13 09:43:37|manual__2025-11-2...|manual__2025-11-2...|
++----------+----------+---------+------+-------------+--------------------+---------+-------+-------------------+--------------------+-------------------+--------------------+--------------------+
+
+2026-02-02 13:06:01,074 - INFO - Full data refresh: Truncating target table
+2026-02-02 13:06:01,074 - INFO - Full data refresh: Truncating target table
+2026-02-02 13:06:01,074 - INFO - [SCD1] Starting table truncation - school_silver.student_info
+2026-02-02 13:06:01,074 - INFO - [SCD1] Starting table truncation - school_silver.student_info
+2026-02-02 13:06:01,166 - INFO - [SCD1] Table truncated successfully - school_silver.student_info
+2026-02-02 13:06:01,166 - INFO - [SCD1] Table truncated successfully - school_silver.student_info
+2026-02-02 13:06:01,167 - INFO - Applying custom code transformations
+2026-02-02 13:06:01,167 - INFO - Applying custom code transformations
+file found
+2026-02-02 13:06:01,172 - INFO - SCD1 failed for student_info: SourceData is required
+2026-02-02 13:06:01,172 - INFO - SCD1 failed for student_info: SourceData is required
+2026-02-02 13:06:01,173 - INFO - Writing into Audit Table
+2026-02-02 13:06:01,173 - INFO - Writing into Audit Table
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+|config_key|code_name|              run_id|source_system|  schema_name|target_table_name|source_file_name|          start_time|            end_time|inserted_row_count|updated_row_count|deleted_row_count|no_change_row_count|status|    last_pulled_time|
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+|      3019|     SCD1|manual__2026-02-0...|        mysql|school_silver|     student_info|              NA|2026-02-02 13:05:...|2026-02-02 13:06:...|                 0|                0|                0|                  0|  Fail|2026-02-02 13:06:...|
++----------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+------------------+-----------------+-----------------+-------------------+------+--------------------+
+
+Hi Check
+1903
+2026-02-02 13:06:06,341 - INFO - Writing error log to error table
+2026-02-02 13:06:06,341 - INFO - Writing error log to error table
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+|config_key|audit_key|code_name|              run_id|source_system|  schema_name|target_table_name|source_file_name|      execution_time|       error_details|
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+|      3019|     1903|     SCD1|manual__2026-02-0...|        mysql|school_silver|     student_info|              NA|2026-02-02 13:06:...|SCD1 failed for s...|
++----------+---------+---------+--------------------+-------------+-------------+-----------------+----------------+--------------------+--------------------+
+
+2026-02-02 13:06:09,046 - INFO - Loading SCD1 - student_info student_info is not completed
+2026-02-02 13:06:09,047 - INFO - Loading SCD1 - student_info student_info is not completed - SourceData is required
+2026-02-02 13:06:09,047 - INFO - Loading SCD1 - student_info student_info is not completed - SourceData is required
+
+[2026-02-02T13:06:09.921+0000] {taskinstance.py:340} INFO - ::group::Post task execution logs
+[2026-02-02T13:06:09.921+0000] {taskinstance.py:352} INFO - Marking task as SUCCESS. dag_id=Silver_Dag_1, task_id=Silver_Dag_1, run_id=manual__2026-02-02T13:05:25.828744+00:00, execution_date=20260202T130525, start_date=20260202T130526, end_date=20260202T130609
+[2026-02-02T13:06:09.978+0000] {local_task_job_runner.py:266} INFO - Task exited with return code 0
+[2026-02-02T13:06:10.006+0000] {taskinstance.py:3895} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-02-02T13:06:10.012+0000] {local_task_job_runner.py:245} INFO - ::endgroup::
